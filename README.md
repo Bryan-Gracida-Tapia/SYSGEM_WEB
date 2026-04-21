@@ -16,39 +16,40 @@ Aplicación web desarrollada con el objetivo de facilitar la gestión de datos d
 ---
 
 ## 📁 Estructura del proyecto
+
+```
 SYSGEM_WEB/
 │
 ├── public/
-│ └── assets/
-│ └── logo.png
+│   └── assets/
+│       └── logo.png
 │
 ├── src/
-│ ├── components/
-│ │ ├── footer.html
-│ │ ├── header_panel_de_anuncios.html
-│ │ ├── header_panel_de_control.html
-│ │ └── header_profile.html
-│ │
-│ ├── interfaces/
-│ │ ├── Gestion_cargos.html
-│ │ ├── Gestion_cargos_comuneros.html
-│ │ ├── Gestión_de_anuncios.html
-│ │ ├── Login.html
-│ │ └── User_Perfil.html
-│ │
-│ ├── Javascripts/
-│ │ ├── gestion_cargos.js
-│ │ ├── global.js
-│ │ └── login.js
-│ │
-│ └── styles/
-│ └── style.css
+│   ├── components/
+│   │   ├── footer.html
+│   │   ├── header_panel_de_anuncios.html
+│   │   ├── header_panel_de_control.html
+│   │   └── header_profile.html
+│   │
+│   ├── interfaces/
+│   │   ├── Gestion_cargos.html
+│   │   ├── Gestion_cargos_comuneros.html
+│   │   ├── Gestión_de_anuncios.html
+│   │   ├── Login.html
+│   │   └── User_Perfil.html
+│   │
+│   ├── Javascripts/
+│   │   ├── gestion_cargos.js
+│   │   ├── global.js
+│   │   └── login.js
+│   │
+│   └── styles/
+│       └── style.css
 │
 ├── structure.html
 ├── index.html
 └── README.md
-
-
+```
 ---
 
 ## 🛠️ Tecnologías utilizadas
