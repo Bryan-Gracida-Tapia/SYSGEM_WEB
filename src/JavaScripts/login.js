@@ -1,4 +1,4 @@
-const API_BASE = window.SYSGEM_API_BASE || "http://localhost:3000/api";
+﻿const API_BASE = window.SYSGEM_API_BASE || "http://localhost:3000/api";
 
 const form = document.getElementById("login-form");
 const userInput = document.getElementById("input-user");
@@ -6,6 +6,7 @@ const passwordInput = document.getElementById("password-login");
 const toggleBtn = document.getElementById("toggle-password");
 const rememberCheck = document.getElementById("remember");
 
+// Alterna visibilidad de contraseña para mejorar UX de entrada de credenciales.
 if (toggleBtn && passwordInput) {
     toggleBtn.addEventListener("click", () => {
         const type = passwordInput.type === "password" ? "text" : "password";
@@ -17,6 +18,7 @@ if (toggleBtn && passwordInput) {
     });
 }
 
+// Flujo principal de autenticación al enviar formulario de login.
 if (form) {
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -39,6 +41,7 @@ if (form) {
     });
 }
 
+// Botón demo informado como no disponible para evitar falsa expectativa.
 const demoButton = document.getElementById("btn-demo");
 if (demoButton) {
     demoButton.addEventListener("click", () => {
@@ -46,6 +49,7 @@ if (demoButton) {
     });
 }
 
+// Si ya existe sesión guardada, redirige automáticamente según rol.
 window.addEventListener("DOMContentLoaded", () => {
     const savedUser = getSavedUser();
     if (savedUser?.role) {
@@ -53,6 +57,11 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+/**
+ * Ejecuta autenticación contra backend (/auth/login).
+ * Retorna un objeto de sesión consistente con id, username, role y token.
+ * Lanza error si backend rechaza credenciales o no devuelve rol.
+ */
 async function loginAgainstApi(username, password) {
     const response = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
@@ -83,6 +92,10 @@ async function loginAgainstApi(username, password) {
     };
 }
 
+/**
+ * Guarda sesión en localStorage o sessionStorage según opción "recordarme".
+ * Si remember=true persiste entre cierres de navegador.
+ */
 function saveSession(user, remember) {
     const serialized = JSON.stringify(user);
 
@@ -96,6 +109,10 @@ function saveSession(user, remember) {
     localStorage.removeItem("user");
 }
 
+/**
+ * Recupera usuario persistido de local/session storage.
+ * Retorna null cuando no existe o no se puede parsear.
+ */
 function getSavedUser() {
     const raw = localStorage.getItem("user") || sessionStorage.getItem("user");
     if (!raw) return null;
@@ -107,6 +124,10 @@ function getSavedUser() {
     }
 }
 
+/**
+ * Redirige al panel adecuado de acuerdo al rol del usuario autenticado.
+ * Muestra alerta si el rol no está mapeado.
+ */
 function redirectByRole(role) {
     const routes = {
         admin: "../views/gestion_cargos.html",
