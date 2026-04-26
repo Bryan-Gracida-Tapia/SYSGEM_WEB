@@ -1,3 +1,7 @@
+﻿/**
+ * Lee el usuario autenticado desde almacenamiento local o de sesión.
+ * Retorna objeto usuario parseado o null si no existe/está corrupto.
+ */
 function getCurrentUser() {
     const raw = localStorage.getItem("user") || sessionStorage.getItem("user");
     if (!raw) return null;
@@ -9,6 +13,10 @@ function getCurrentUser() {
     }
 }
 
+/**
+ * Vincula la lógica de cerrar sesión al botón #btn-logout.
+ * Efectos: limpia storage y redirige al login principal.
+ */
 function initLogout() {
     const logoutButton = document.getElementById("btn-logout");
     if (!logoutButton) return;
@@ -20,6 +28,10 @@ function initLogout() {
     });
 }
 
+/**
+ * Escribe en el header el nombre de usuario logueado.
+ * No modifica nada si el título o el usuario no están disponibles.
+ */
 function renderUser() {
     const title = document.querySelector(".topnav__title");
     const user = getCurrentUser();
@@ -28,6 +40,7 @@ function renderUser() {
     title.textContent = `Panel de control - ${user.username}`;
 }
 
+// Expone utilidades globales para usarse desde scripts inline de las vistas.
 window.getCurrentUser = getCurrentUser;
 window.initLogout = initLogout;
 window.renderUser = renderUser;
