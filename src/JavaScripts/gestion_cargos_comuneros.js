@@ -1,8 +1,9 @@
-const API_BASE = window.SYSGEM_API_BASE || "http://localhost:3000/api";
+﻿const API_BASE = window.SYSGEM_API_BASE || "http://localhost:3000/api";
 
 const ENDPOINTS = {
     dashboardCandidates: ["/dashboard/comuneros", "/comuneros/dashboard", "/comuneros"],
     createComuneroCandidates: ["/comuneros", "/comuneros/create"],
+    updateComuneroCandidates: (id) => [`/comuneros/${id}`],
     updateEstadoCandidates: (id) => [`/comuneros/${id}/estado`, `/comuneros/${id}`],
     bajaCandidates: (id) => [`/comuneros/${id}`, `/comuneros/${id}/baja`]
 };
@@ -10,17 +11,24 @@ const ENDPOINTS = {
 const state = {
     comuneros: [],
     filtered: [],
-    cargoFieldCount: 0
+    cargoFieldCount: 0,
+    editingId: null
 };
 
+// Arranque principal de pantalla: registra eventos y carga información inicial.
 document.addEventListener("DOMContentLoaded", () => {
     bindUI();
     loadComuneros().catch((error) => {
         renderListMessage("No se pudieron cargar los comuneros.");
+        setStatusMessage(getErrorMessage(error, "Error al cargar comuneros."));
         console.error("Error al cargar comuneros:", error);
     });
 });
 
+/**
+ * Vincula los elementos del DOM con su comportamiento dinámico.
+ * Efectos: listeners para búsqueda, alta, edición, acciones de fila, imagen y visibilidad de contraseña.
+ */
 function bindUI() {
     const searchInput = document.getElementById("search-comuneros");
     const openAddButton = document.getElementById("btn-open-add");
@@ -32,29 +40,24 @@ function bindUI() {
     const togglePassword = document.getElementById("toggle-password");
     const passwordInput = document.getElementById("password");
 
-    if (searchInput) {
-        searchInput.addEventListener("input", applyFilter);
-    }
-
+    if (searchInput) searchInput.addEventListener("input", applyFilter);
     if (openAddButton) {
-        openAddButton.addEventListener("click", () => toggleAddSection(true));
+        openAddButton.addEventListener("click", () => {
+            startCreateMode();
+            toggleAddSection(true);
+        });
     }
 
     if (cancelAddButton) {
-        cancelAddButton.addEventListener("click", () => toggleAddSection(false));
+        cancelAddButton.addEventListener("click", () => {
+            resetFormState();
+            toggleAddSection(false);
+        });
     }
 
-    if (addCargoButton) {
-        addCargoButton.addEventListener("click", addCargoField);
-    }
-
-    if (formAdd) {
-        formAdd.addEventListener("submit", submitComunero);
-    }
-
-    if (list) {
-        list.addEventListener("click", handleListAction);
-    }
+    if (addCargoButton) addCargoButton.addEventListener("click", addCargoField);
+    if (formAdd) formAdd.addEventListener("submit", submitComunero);
+    if (list) list.addEventListener("click", handleListAction);
 
     if (photoInput) {
         photoInput.addEventListener("change", () => {
@@ -73,14 +76,26 @@ function bindUI() {
     }
 }
 
+/**
+ * Refresca la fuente de datos principal de comuneros.
+ * Efectos: cambia mensaje de estado, sincroniza state.comuneros/state.filtered y rerenderiza lista + resumen.
+ */
 async function loadComuneros() {
+    setStatusMessage("Cargando comuneros...");
     const dashboardData = await fetchComunerosDashboard();
+
     state.comuneros = dashboardData.comuneros;
     state.filtered = [...state.comuneros];
+
     renderComunerosList(state.filtered);
     renderSummary(dashboardData.estadisticas);
+    setStatusMessage(`Se cargaron ${state.comuneros.length} comuneros.`);
 }
 
+/**
+ * Consulta la data de comuneros intentando varios endpoints compatibles.
+ * Devuelve datos normalizados para evitar condicionales en capas de render.
+ */
 async function fetchComunerosDashboard() {
     let lastError = null;
 
@@ -102,13 +117,18 @@ async function fetchComunerosDashboard() {
     throw lastError || new Error("No se encontraron endpoints para comuneros.");
 }
 
+/**
+ * Unifica la respuesta del backend en:
+ * - array de comuneros homogenizado
+ * - estadísticas precomputadas o tomadas de backend
+ */
 function normalizeDashboardPayload(payload) {
     const data = payload?.data ?? payload ?? {};
     const comunerosRaw = Array.isArray(data)
         ? data
         : ensureArray(data.comuneros || data.members || data.items);
-    const comuneros = comunerosRaw.map(normalizeComunero);
 
+    const comuneros = comunerosRaw.map(normalizeComunero);
     const stats = data.estadisticas || data.stats || {};
     const computed = computeStats(comuneros);
 
@@ -123,15 +143,28 @@ function normalizeDashboardPayload(payload) {
     };
 }
 
+/**
+ * Mapea un comunero del backend a un modelo interno estable.
+ * Incluye fallback de nombres de campos y normalización de estado.
+ */
 function normalizeComunero(item) {
     return {
         id: item.id ?? item._id ?? "",
         nombre: item.nombre || item.nombreCompleto || item.name || "Sin nombre",
-        estado: (item.estado || item.status || "inactivo").toLowerCase(),
-        inicio: item.fechaInicio || item.startDate || item.createdAt || "Sin fecha"
+        estado: normalizeStatus(item.estado || item.status || "inactivo"),
+        inicio: item.fechaInicio || item.startDate || item.createdAt || "Sin fecha",
+        fechaNacimiento: item.fechaNacimiento || item.birthdate || "",
+        estadoCivil: item.estadoCivil || item.civilStatus || "",
+        tipo: item.tipo || item.type || "",
+        direccion: item.direccion || item.address || "",
+        correo: item.correo || item.email || ""
     };
 }
 
+/**
+ * Calcula estadísticas locales por estado de comunero.
+ * Retorna total, activos, inactivos y baja.
+ */
 function computeStats(comuneros) {
     const total = comuneros.length;
     const activos = comuneros.filter((c) => c.estado === "activo").length;
@@ -141,6 +174,10 @@ function computeStats(comuneros) {
     return { total, activos, inactivos, baja };
 }
 
+/**
+ * Renderiza el listado de comuneros con botones de acción por fila.
+ * Si no hay datos, muestra tarjeta de estado vacío.
+ */
 function renderComunerosList(comuneros) {
     const list = document.getElementById("comuneros-list");
     if (!list) return;
@@ -175,6 +212,9 @@ function renderComunerosList(comuneros) {
     }).join("");
 }
 
+/**
+ * Actualiza el resumen lateral con conteos globales.
+ */
 function renderSummary(stats) {
     setText("summary-total", stats.total);
     setText("summary-activos", stats.activos);
@@ -182,12 +222,17 @@ function renderSummary(stats) {
     setText("summary-baja", stats.baja);
 }
 
+/**
+ * Filtra el listado actual por nombre, estado o id.
+ * Efectos: reemplaza state.filtered, rerenderiza y reporta total de resultados.
+ */
 function applyFilter() {
     const query = (document.getElementById("search-comuneros")?.value || "").trim().toLowerCase();
 
     if (!query) {
         state.filtered = [...state.comuneros];
         renderComunerosList(state.filtered);
+        setStatusMessage(`Mostrando ${state.filtered.length} comuneros.`);
         return;
     }
 
@@ -198,8 +243,13 @@ function applyFilter() {
     });
 
     renderComunerosList(state.filtered);
+    setStatusMessage(`Resultado de búsqueda: ${state.filtered.length} comuneros.`);
 }
 
+/**
+ * Controlador central de acciones por fila (event delegation).
+ * Administra activar/desactivar/baja/edición y refresca datos al finalizar.
+ */
 async function handleListAction(event) {
     const target = event.target.closest("button[data-action]");
     if (!target) return;
@@ -209,27 +259,45 @@ async function handleListAction(event) {
     if (!comuneroId) return;
 
     target.disabled = true;
+
     try {
         if (action === "activate") {
             await updateEstado(comuneroId, "activo");
+            setStatusMessage("Comunero activado correctamente.");
         } else if (action === "deactivate") {
             await updateEstado(comuneroId, "inactivo");
+            setStatusMessage("Comunero desactivado correctamente.");
         } else if (action === "remove") {
+            const confirmed = window.confirm("¿Seguro que deseas dar de baja este comunero?");
+            if (!confirmed) return;
             await darDeBaja(comuneroId);
+            setStatusMessage("Comunero dado de baja correctamente.");
         } else if (action === "edit") {
-            alert("Edición directa pendiente. Por ahora usa el formulario de alta.");
+            const comunero = state.comuneros.find((item) => String(item.id) === String(comuneroId));
+            if (!comunero) {
+                setStatusMessage("No se encontró el comunero para edición.");
+                return;
+            }
+
+            startEditMode(comunero);
+            toggleAddSection(true);
+            setStatusMessage(`Editando a ${comunero.nombre}.`);
             return;
         }
 
         await loadComuneros();
     } catch (error) {
-        alert("No se pudo completar la acción.");
+        setStatusMessage(getErrorMessage(error, "No se pudo completar la acción."));
         console.error("Error en acción de comunero:", error);
     } finally {
         target.disabled = false;
     }
 }
 
+/**
+ * Actualiza el estado de un comunero (activo/inactivo) probando PATCH y PUT.
+ * Se detiene en el primer éxito, o lanza error consolidado.
+ */
 async function updateEstado(comuneroId, estado) {
     const methods = ["PATCH", "PUT"];
     let lastError = null;
@@ -253,6 +321,9 @@ async function updateEstado(comuneroId, estado) {
     throw lastError || new Error("No se pudo actualizar estado.");
 }
 
+/**
+ * Ejecuta baja lógica/física de comunero usando DELETE y endpoint fallback.
+ */
 async function darDeBaja(comuneroId) {
     let lastError = null;
 
@@ -275,6 +346,10 @@ async function darDeBaja(comuneroId) {
     throw lastError;
 }
 
+/**
+ * Muestra u oculta el formulario de alta/edición.
+ * Efectos: toggles de hidden/aria-hidden y scroll automático al abrir.
+ */
 function toggleAddSection(show) {
     const section = document.getElementById("add-section");
     if (!section) return;
@@ -287,37 +362,43 @@ function toggleAddSection(show) {
     }
 }
 
-function addCargoField() {
+/**
+ * Inserta dinámicamente una fila de cargo cumplido en el formulario.
+ * Usa contador incremental para ids únicos de inputs.
+ */
+function addCargoField(cargo = "", year = "") {
     const container = document.getElementById("cargo-fields");
     if (!container) return;
 
     state.cargoFieldCount += 1;
-    const rowId = `cargo-row-${state.cargoFieldCount}`;
 
     const row = document.createElement("div");
     row.className = "form__grid";
-    row.id = rowId;
     row.innerHTML = `
         <div class="form__group">
             <label class="form__label" for="cargo-name-${state.cargoFieldCount}">Cargo</label>
-            <input class="form__input cargo-name" id="cargo-name-${state.cargoFieldCount}" type="text" placeholder="Nombre del cargo" />
+            <input class="form__input cargo-name" id="cargo-name-${state.cargoFieldCount}" type="text" placeholder="Nombre del cargo" value="${escapeHtml(cargo)}" />
         </div>
         <div class="form__group">
             <label class="form__label" for="cargo-year-${state.cargoFieldCount}">Año</label>
-            <input class="form__input cargo-year" id="cargo-year-${state.cargoFieldCount}" type="number" min="1900" max="2100" placeholder="2026" />
+            <input class="form__input cargo-year" id="cargo-year-${state.cargoFieldCount}" type="number" min="1900" max="2100" placeholder="2026" value="${escapeHtml(String(year || ""))}" />
         </div>
     `;
 
     container.appendChild(row);
 }
 
+/**
+ * Maneja submit del formulario para crear o editar comunero.
+ * Valida campos mínimos, bloquea botón durante la llamada y refresca el listado al terminar.
+ */
 async function submitComunero(event) {
     event.preventDefault();
     const form = event.currentTarget;
     const payload = buildComuneroPayload();
 
-    if (!payload.nombreCompleto || !payload.correo || !payload.password) {
-        alert("Completa los campos obligatorios.");
+    if (!payload.nombreCompleto || !payload.correo || (!state.editingId && !payload.password)) {
+        setStatusMessage("Completa los campos obligatorios.");
         return;
     }
 
@@ -325,26 +406,35 @@ async function submitComunero(event) {
     if (saveButton) saveButton.disabled = true;
 
     try {
-        await createComunero(payload);
+        if (state.editingId) {
+            await updateComunero(state.editingId, payload);
+            setStatusMessage("Comunero actualizado correctamente.");
+        } else {
+            await createComunero(payload);
+            setStatusMessage("Comunero creado correctamente.");
+        }
+
         form.reset();
-        const cargoFields = document.getElementById("cargo-fields");
-        if (cargoFields) cargoFields.innerHTML = "";
-        state.cargoFieldCount = 0;
-        const fileLabel = document.getElementById("photo-filename");
-        if (fileLabel) fileLabel.textContent = "Ningún archivo seleccionado";
+        clearCargoFields();
+        resetFormState();
         toggleAddSection(false);
         await loadComuneros();
     } catch (error) {
-        alert("No se pudo guardar el comunero.");
+        setStatusMessage(getErrorMessage(error, "No se pudo guardar el comunero."));
         console.error("Error al guardar comunero:", error);
     } finally {
         if (saveButton) saveButton.disabled = false;
     }
 }
 
+/**
+ * Construye el payload de alta/edición leyendo todos los campos del formulario.
+ * Elimina password en modo edición cuando no se envía una nueva contraseña.
+ */
 function buildComuneroPayload() {
     const cargoNames = Array.from(document.querySelectorAll(".cargo-name"));
     const cargoYears = Array.from(document.querySelectorAll(".cargo-year"));
+
     const cargosCumplidos = cargoNames.map((input, index) => {
         return {
             cargo: input.value.trim(),
@@ -352,7 +442,7 @@ function buildComuneroPayload() {
         };
     }).filter((item) => item.cargo);
 
-    return {
+    const payload = {
         nombreCompleto: document.getElementById("full-name")?.value?.trim() || "",
         fechaNacimiento: document.getElementById("birthdate")?.value || "",
         estadoCivil: document.querySelector('input[name="civil_status"]:checked')?.value || "",
@@ -362,8 +452,17 @@ function buildComuneroPayload() {
         password: document.getElementById("password")?.value || "",
         cargosCumplidos
     };
+
+    if (state.editingId && !payload.password) {
+        delete payload.password;
+    }
+
+    return payload;
 }
 
+/**
+ * Crea un comunero nuevo en backend probando endpoints de compatibilidad.
+ */
 async function createComunero(payload) {
     let lastError = null;
 
@@ -384,6 +483,121 @@ async function createComunero(payload) {
     throw lastError || new Error("No se pudo crear el comunero.");
 }
 
+/**
+ * Actualiza un comunero existente usando PATCH/PUT sobre endpoint principal.
+ */
+async function updateComunero(comuneroId, payload) {
+    const methods = ["PATCH", "PUT"];
+    let lastError = null;
+
+    for (const endpoint of ENDPOINTS.updateComuneroCandidates(comuneroId)) {
+        for (const method of methods) {
+            try {
+                const response = await apiFetch(endpoint, {
+                    method,
+                    body: payload
+                });
+
+                if (response.ok) return;
+                lastError = new Error(`Error ${response.status} en ${method} ${endpoint}`);
+            } catch (error) {
+                lastError = error;
+            }
+        }
+    }
+
+    throw lastError || new Error("No se pudo actualizar el comunero.");
+}
+
+/**
+ * Deja el formulario en modo "crear": limpia edición activa y textos de UI.
+ */
+function startCreateMode() {
+    state.editingId = null;
+    const saveButton = document.getElementById("btn-save-comunero");
+    if (saveButton) saveButton.textContent = "Guardar Comunero";
+
+    const formTitle = document.querySelector("#add-section .card__title");
+    if (formTitle) formTitle.textContent = "Agregar Nuevo Comunero";
+}
+
+/**
+ * Configura el formulario en modo "editar" y precarga datos del comunero seleccionado.
+ */
+function startEditMode(comunero) {
+    state.editingId = comunero.id;
+
+    const saveButton = document.getElementById("btn-save-comunero");
+    if (saveButton) saveButton.textContent = "Actualizar Comunero";
+
+    const formTitle = document.querySelector("#add-section .card__title");
+    if (formTitle) formTitle.textContent = "Editar Comunero";
+
+    setInputValue("full-name", comunero.nombre);
+    setInputValue("birthdate", comunero.fechaNacimiento);
+    setInputValue("address", comunero.direccion);
+    setInputValue("email", comunero.correo);
+    setInputValue("password", "");
+
+    setCheckedRadio("civil_status", comunero.estadoCivil);
+    setCheckedRadio("type", comunero.tipo);
+
+    clearCargoFields();
+}
+
+/**
+ * Restablece completamente el formulario y estado interno de edición.
+ */
+function resetFormState() {
+    state.editingId = null;
+    const form = document.getElementById("form-add");
+    if (form) form.reset();
+
+    clearCargoFields();
+    const fileLabel = document.getElementById("photo-filename");
+    if (fileLabel) fileLabel.textContent = "Ningún archivo seleccionado";
+
+    startCreateMode();
+}
+
+/**
+ * Elimina todas las filas dinámicas de cargos y reinicia contador interno.
+ */
+function clearCargoFields() {
+    const cargoFields = document.getElementById("cargo-fields");
+    if (cargoFields) cargoFields.innerHTML = "";
+    state.cargoFieldCount = 0;
+}
+
+/**
+ * Asigna valor a un input del formulario por id.
+ */
+function setInputValue(id, value) {
+    const element = document.getElementById(id);
+    if (element) element.value = value || "";
+}
+
+/**
+ * Marca la opción de radio correspondiente dentro de un grupo por nombre.
+ */
+function setCheckedRadio(groupName, value) {
+    const radios = Array.from(document.querySelectorAll(`input[name="${groupName}"]`));
+    radios.forEach((radio) => {
+        radio.checked = radio.value === (value || "");
+    });
+}
+
+/**
+ * Muestra mensajes de estado operativos en la vista de comuneros.
+ */
+function setStatusMessage(message) {
+    const node = document.getElementById("comuneros-message");
+    if (node) node.textContent = String(message || "");
+}
+
+/**
+ * Envoltura de fetch con base URL, headers JSON, token Bearer y serialización de body.
+ */
 function apiFetch(endpoint, options = {}) {
     const token = getAuthToken();
     const headers = {
@@ -407,6 +621,9 @@ function apiFetch(endpoint, options = {}) {
     return fetch(`${API_BASE}${endpoint}`, config);
 }
 
+/**
+ * Recupera token desde localStorage/sessionStorage para autenticación de API.
+ */
 function getAuthToken() {
     const rawUser = localStorage.getItem("user") || sessionStorage.getItem("user");
     if (!rawUser) return "";
@@ -419,6 +636,9 @@ function getAuthToken() {
     }
 }
 
+/**
+ * Renderiza un mensaje informativo simple en la lista cuando no hay filas útiles.
+ */
 function renderListMessage(message) {
     const list = document.getElementById("comuneros-list");
     if (!list) return;
@@ -432,31 +652,72 @@ function renderListMessage(message) {
     `;
 }
 
+/**
+ * Escribe un valor textual en un elemento por id.
+ */
 function setText(id, value) {
     const node = document.getElementById(id);
     if (node) node.textContent = String(value ?? 0);
 }
 
+/**
+ * Normaliza entrada a arreglo para operaciones de mapeo/filtrado seguras.
+ */
 function ensureArray(value) {
     return Array.isArray(value) ? value : [];
 }
 
+/**
+ * Convierte un valor cualquiera a número válido, devolviendo 0 en fallo.
+ */
 function toNumber(value) {
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : 0;
 }
 
+/**
+ * Capitaliza la primera letra de una cadena para etiquetas visibles.
+ */
 function capitalize(value) {
     if (!value) return "";
     return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
+/**
+ * Homologa estados equivalentes para mantener filtros y conteos consistentes.
+ */
+function normalizeStatus(value) {
+    const status = String(value || "inactivo").trim().toLowerCase();
+    if (["activo", "inactivo", "baja"].includes(status)) return status;
+    if (status === "activa") return "activo";
+    if (status === "inactiva") return "inactivo";
+    return "inactivo";
+}
+
+/**
+ * Formatea fecha a es-MX; conserva valor original si es inválida.
+ */
 function formatDate(value) {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return String(value || "Sin fecha");
-    return date.toISOString().slice(0, 10);
+    return date.toLocaleDateString("es-MX", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+    });
 }
 
+/**
+ * Obtiene mensaje de error legible para interfaz.
+ */
+function getErrorMessage(error, fallback) {
+    const message = String(error?.message || "").trim();
+    return message || fallback;
+}
+
+/**
+ * Escapa caracteres especiales HTML para prevenir XSS al usar innerHTML.
+ */
 function escapeHtml(value) {
     return String(value)
         .replaceAll("&", "&amp;")
