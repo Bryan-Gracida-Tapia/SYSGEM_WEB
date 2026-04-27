@@ -1,24 +1,28 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Configuración base de la vista y recursos compartidos -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Módulo de Gestión y Control de Cargos y Servicios</title>
     <link rel="stylesheet" href="../styles/style.css" />
     <link rel="stylesheet" href="../styles/global.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- URL base de API para peticiones del módulo -->
     <script>
         window.SYSGEM_API_BASE = window.SYSGEM_API_BASE || "http://localhost:3000/api";
     </script>
 </head>
 <body>
-<!-- Redirección automática -->
+<!-- Estructura principal de la pantalla de gestión de comuneros -->
 <div class="container">
-    <!-- Encabezado dinámico -->
+    <!-- Header compartido, inyectado con fetch -->
     <header class="topnav" id="topnav"></header>
 
     <main class="dashboard">
+        <!-- Columna principal con acciones, listado y formulario -->
         <section class="dashboard__section">
+            <!-- Catálogo visual de acciones disponibles sobre cada comunero -->
             <article class="card">
                 <h2 class="card__title">Acciones disponibles</h2>
                 <p class="card__description">Acciones disponibles para aplicar sobre los comuneros</p>
@@ -66,6 +70,7 @@
                 </div>
             </article>
 
+            <!-- Gestión operativa: búsqueda, listado y alta/edición -->
             <article class="card">
                 <div class="card__managetop">
                     <div class="card__managetop-left">
@@ -97,6 +102,7 @@
                     </div>
                 </div>
 
+                <!-- Formulario expandible para registrar o editar comuneros -->
                 <div class="card card--add" id="add-section" aria-hidden="true" hidden>
                     <h3 class="card__title">Agregar Nuevo Comunero</h3>
                     <p class="card__description card__description--small">Rellena los datos y agrega los cargos cumplidos. Campos obligatorios marcados con *</p>
@@ -190,8 +196,10 @@
             </article>
         </section>
 
+        <!-- Barra lateral con indicadores rápidos y acceso a soporte -->
         <aside class="dashboard__aside">
             <div class="card">
+                <!-- Resumen estadístico general -->
                 <div class="summary-card">
                     <h4 class="summary-card__title">Resumen rápido</h4>
                     <p class="summary-card__description">Estadísticas rápidas del sistema</p>
@@ -215,6 +223,7 @@
                     </div>
                 </div>
 
+                <!-- Acción de soporte para atención del usuario -->
                 <div class="summary-card summary-card--addition">
                     <h4 class="summary-card__title">Soporte</h4>
                     <p class="summary-card__description">¿Necesitas ayuda con el sistema?</p>
@@ -224,13 +233,15 @@
         </aside>
     </main>
 
-    <!-- Pie de página dinámico -->
+    <!-- Footer compartido, cargado de forma dinámica -->
     <footer class="footer" id="footer"></footer>
 </div>
 
+<!-- Capa compartida de conexión/API + scripts base y del módulo -->
+<script src="../JavaScripts/DB.js"></script>
 <script src="../JavaScripts/global.js"></script>
 <script src="../JavaScripts/gestion_cargos_comuneros.js"></script>
-<!-- Carga dinámica del encabezado -->
+<!-- Inyección de componentes de navegación y pie de página -->
 <script>
     fetch('../Components/header_panel_control.html')
         .then((res) => res.text())
