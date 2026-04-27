@@ -1,5 +1,22 @@
-﻿const API_BASE = window.SYSGEM_API_BASE || "http://localhost:3000/api";
+﻿/**
+ * Módulo de gestión de comuneros.
+ * Depende de DB.js para centralizar conexión y autenticación HTTP.
+ */
+const db = window.SYSGEM_DB;
+const dbApiFetch = db?.apiFetch?.bind(db) || ((endpoint, options = {}) => {
+    const headers = {
+        "Content-Type": "application/json",
+        ...(options.headers || {})
+    };
+    const config = { ...options, headers };
+    if (config.body && typeof config.body !== "string") {
+        config.body = JSON.stringify(config.body);
+    }
+    const baseUrl = window.SYSGEM_API_BASE || "http://localhost:3000/api";
+    return fetch(`${baseUrl}${endpoint}`, config);
+});
 
+// Endpoints alternativos para soportar distintas rutas del backend.
 const ENDPOINTS = {
     dashboardCandidates: ["/dashboard/comuneros", "/comuneros/dashboard", "/comuneros"],
     createComuneroCandidates: ["/comuneros", "/comuneros/create"],
@@ -8,6 +25,7 @@ const ENDPOINTS = {
     bajaCandidates: (id) => [`/comuneros/${id}`, `/comuneros/${id}/baja`]
 };
 
+// Estado interno de la vista: dataset actual, filtro, formulario dinámico y modo edición.
 const state = {
     comuneros: [],
     filtered: [],
@@ -77,6 +95,9 @@ function bindUI() {
 }
 
 /**
+ * -----------------------------
+ * Carga de datos y normalización
+ * -----------------------------
  * Refresca la fuente de datos principal de comuneros.
  * Efectos: cambia mensaje de estado, sincroniza state.comuneros/state.filtered y rerenderiza lista + resumen.
  */
@@ -101,7 +122,7 @@ async function fetchComunerosDashboard() {
 
     for (const endpoint of ENDPOINTS.dashboardCandidates) {
         try {
-            const response = await apiFetch(endpoint, { method: "GET" });
+            const response = await dbApiFetch(endpoint, { method: "GET" });
             if (!response.ok) {
                 lastError = new Error(`Error ${response.status} en ${endpoint}`);
                 continue;
@@ -175,6 +196,9 @@ function computeStats(comuneros) {
 }
 
 /**
+ * -----------------------------
+ * Renderizado y búsqueda
+ * -----------------------------
  * Renderiza el listado de comuneros con botones de acción por fila.
  * Si no hay datos, muestra tarjeta de estado vacío.
  */
@@ -247,6 +271,9 @@ function applyFilter() {
 }
 
 /**
+ * -----------------------------
+ * Acciones de fila (CRUD/estado)
+ * -----------------------------
  * Controlador central de acciones por fila (event delegation).
  * Administra activar/desactivar/baja/edición y refresca datos al finalizar.
  */
@@ -305,7 +332,7 @@ async function updateEstado(comuneroId, estado) {
     for (const endpoint of ENDPOINTS.updateEstadoCandidates(comuneroId)) {
         for (const method of methods) {
             try {
-                const response = await apiFetch(endpoint, {
+                const response = await dbApiFetch(endpoint, {
                     method,
                     body: { estado }
                 });
@@ -328,7 +355,7 @@ async function darDeBaja(comuneroId) {
     let lastError = null;
 
     try {
-        const deleteResponse = await apiFetch(ENDPOINTS.bajaCandidates(comuneroId)[0], { method: "DELETE" });
+        const deleteResponse = await dbApiFetch(ENDPOINTS.bajaCandidates(comuneroId)[0], { method: "DELETE" });
         if (deleteResponse.ok) return;
         lastError = new Error(`Error ${deleteResponse.status} al dar de baja.`);
     } catch (error) {
@@ -336,7 +363,7 @@ async function darDeBaja(comuneroId) {
     }
 
     try {
-        const fallbackResponse = await apiFetch(ENDPOINTS.bajaCandidates(comuneroId)[1], { method: "POST" });
+        const fallbackResponse = await dbApiFetch(ENDPOINTS.bajaCandidates(comuneroId)[1], { method: "POST" });
         if (fallbackResponse.ok) return;
         lastError = new Error(`Error ${fallbackResponse.status} al dar de baja.`);
     } catch (error) {
@@ -347,6 +374,9 @@ async function darDeBaja(comuneroId) {
 }
 
 /**
+ * -----------------------------
+ * Formulario de alta/edición
+ * -----------------------------
  * Muestra u oculta el formulario de alta/edición.
  * Efectos: toggles de hidden/aria-hidden y scroll automático al abrir.
  */
@@ -468,7 +498,7 @@ async function createComunero(payload) {
 
     for (const endpoint of ENDPOINTS.createComuneroCandidates) {
         try {
-            const response = await apiFetch(endpoint, {
+            const response = await dbApiFetch(endpoint, {
                 method: "POST",
                 body: payload
             });
@@ -493,7 +523,7 @@ async function updateComunero(comuneroId, payload) {
     for (const endpoint of ENDPOINTS.updateComuneroCandidates(comuneroId)) {
         for (const method of methods) {
             try {
-                const response = await apiFetch(endpoint, {
+                const response = await dbApiFetch(endpoint, {
                     method,
                     body: payload
                 });
@@ -588,6 +618,9 @@ function setCheckedRadio(groupName, value) {
 }
 
 /**
+ * -----------------------------
+ * Infraestructura (API + helpers)
+ * -----------------------------
  * Muestra mensajes de estado operativos en la vista de comuneros.
  */
 function setStatusMessage(message) {
@@ -595,46 +628,7 @@ function setStatusMessage(message) {
     if (node) node.textContent = String(message || "");
 }
 
-/**
- * Envoltura de fetch con base URL, headers JSON, token Bearer y serialización de body.
- */
-function apiFetch(endpoint, options = {}) {
-    const token = getAuthToken();
-    const headers = {
-        "Content-Type": "application/json",
-        ...(options.headers || {})
-    };
-
-    if (token) {
-        headers.Authorization = `Bearer ${token}`;
-    }
-
-    const config = {
-        ...options,
-        headers
-    };
-
-    if (config.body && typeof config.body !== "string") {
-        config.body = JSON.stringify(config.body);
-    }
-
-    return fetch(`${API_BASE}${endpoint}`, config);
-}
-
-/**
- * Recupera token desde localStorage/sessionStorage para autenticación de API.
- */
-function getAuthToken() {
-    const rawUser = localStorage.getItem("user") || sessionStorage.getItem("user");
-    if (!rawUser) return "";
-
-    try {
-        const user = JSON.parse(rawUser);
-        return user?.token || "";
-    } catch (_error) {
-        return "";
-    }
-}
+// Nota: la capa HTTP/autenticación se movió a DB.js (window.SYSGEM_DB.apiFetch).
 
 /**
  * Renderiza un mensaje informativo simple en la lista cuando no hay filas útiles.

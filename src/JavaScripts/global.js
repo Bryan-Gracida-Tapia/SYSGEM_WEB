@@ -1,8 +1,21 @@
 ﻿/**
+ * ==============================
+ * Sesion y header global
+ * ==============================
+ * Este archivo concentra utilidades reutilizables para:
+ * - leer la sesion del usuario autenticado,
+ * - cerrar sesion desde el boton del encabezado,
+ * - renderizar el nombre del usuario en la barra superior.
+ */
+const db = window.SYSGEM_DB;
+
+/**
  * Lee el usuario autenticado desde almacenamiento local o de sesión.
  * Retorna objeto usuario parseado o null si no existe/está corrupto.
  */
 function getCurrentUser() {
+    if (db?.getCurrentUser) return db.getCurrentUser();
+
     const raw = localStorage.getItem("user") || sessionStorage.getItem("user");
     if (!raw) return null;
 
@@ -22,8 +35,12 @@ function initLogout() {
     if (!logoutButton) return;
 
     logoutButton.addEventListener("click", () => {
-        localStorage.removeItem("user");
-        sessionStorage.removeItem("user");
+        if (db?.clearSession) {
+            db.clearSession();
+        } else {
+            localStorage.removeItem("user");
+            sessionStorage.removeItem("user");
+        }
         window.location.href = "../../index.html";
     });
 }

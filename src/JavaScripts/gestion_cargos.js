@@ -1,10 +1,28 @@
-﻿const API_BASE = window.SYSGEM_API_BASE || "http://localhost:3000/api";
+﻿/**
+ * Módulo de gestión de cargos.
+ * Depende de DB.js para centralizar conexión y autenticación HTTP.
+ */
+const db = window.SYSGEM_DB;
+const dbApiFetch = db?.apiFetch?.bind(db) || ((endpoint, options = {}) => {
+    const headers = {
+        "Content-Type": "application/json",
+        ...(options.headers || {})
+    };
+    const config = { ...options, headers };
+    if (config.body && typeof config.body !== "string") {
+        config.body = JSON.stringify(config.body);
+    }
+    const baseUrl = window.SYSGEM_API_BASE || "http://localhost:3000/api";
+    return fetch(`${baseUrl}${endpoint}`, config);
+});
 
+// Endpoints candidatos para tolerar variaciones entre versiones del backend.
 const ENDPOINTS = {
     dashboardCandidates: ["/dashboard/cargos", "/cargos/dashboard"],
     asignarCargoCandidates: ["/cargos/asignar", "/asignaciones/cargos"]
 };
 
+// Estado local mínimo de la vista para evitar depender del DOM como fuente de verdad.
 const state = {
     comuneroObjetivo: null,
     cargosDisponibles: []
@@ -29,6 +47,9 @@ async function initDashboard() {
 }
 
 /**
+ * -----------------------------
+ * Carga y normalización de datos
+ * -----------------------------
  * Orquesta el refresco total del dashboard:
  * 1) muestra estado de carga,
  * 2) obtiene datos del backend,
@@ -58,7 +79,7 @@ async function fetchDashboard() {
 
     for (const endpoint of ENDPOINTS.dashboardCandidates) {
         try {
-            const response = await apiFetch(endpoint, { method: "GET" });
+            const response = await dbApiFetch(endpoint, { method: "GET" });
             if (!response.ok) {
                 lastError = new Error(`Error ${response.status} al consultar ${endpoint}`);
                 continue;
@@ -112,6 +133,9 @@ function toNumber(value) {
 }
 
 /**
+ * -----------------------------
+ * Renderizado de interfaz
+ * -----------------------------
  * Renderiza la tarjeta/lista de comuneros con cargo activo.
  * Si no hay datos, muestra estado vacío; si faltan nodos en DOM, no hace nada.
  */
@@ -205,6 +229,9 @@ function updateAssignmentTarget(comuneroPendiente) {
 }
 
 /**
+ * -----------------------------
+ * Eventos y acciones de usuario
+ * -----------------------------
  * Registra el click de asignación de cargo.
  * Flujo: valida selección -> bloquea botón -> llama API -> refresca dashboard -> restaura estado del botón.
  */
@@ -254,7 +281,7 @@ async function assignCargo(body) {
 
     for (const endpoint of ENDPOINTS.asignarCargoCandidates) {
         try {
-            const response = await apiFetch(endpoint, {
+            const response = await dbApiFetch(endpoint, {
                 method: "POST",
                 body
             });
@@ -270,6 +297,9 @@ async function assignCargo(body) {
 }
 
 /**
+ * -----------------------------
+ * Utilidades de UI
+ * -----------------------------
  * Escribe texto plano en un nodo identificado por id.
  * Si el nodo no existe, evita excepción y termina silenciosamente.
  */
@@ -286,56 +316,12 @@ function setStatusMessage(message) {
     if (node) node.textContent = message;
 }
 
-/**
- * Obtiene el token de sesión actual (localStorage con prioridad, luego sessionStorage).
- * Retorna string vacío si no existe sesión válida o el JSON está corrupto.
- */
-function getAuthToken() {
-    const localUser = localStorage.getItem("user");
-    const sessionUser = sessionStorage.getItem("user");
-    const user = localUser || sessionUser;
-
-    if (!user) return "";
-
-    try {
-        const parsedUser = JSON.parse(user);
-        return parsedUser?.token || "";
-    } catch (_error) {
-        return "";
-    }
-}
+// Nota: la capa HTTP/autenticación se movió a DB.js (window.SYSGEM_DB.apiFetch).
 
 /**
- * Wrapper de fetch con:
- * - base URL centralizada,
- * - headers JSON por defecto,
- * - inyección automática de Bearer token,
- * - serialización automática de body object -> JSON.
- */
-function apiFetch(endpoint, options = {}) {
-    const token = getAuthToken();
-    const headers = {
-        "Content-Type": "application/json",
-        ...(options.headers || {})
-    };
-
-    if (token) {
-        headers.Authorization = `Bearer ${token}`;
-    }
-
-    const requestConfig = {
-        ...options,
-        headers
-    };
-
-    if (requestConfig.body && typeof requestConfig.body !== "string") {
-        requestConfig.body = JSON.stringify(requestConfig.body);
-    }
-
-    return fetch(`${API_BASE}${endpoint}`, requestConfig);
-}
-
-/**
+ * -----------------------------
+ * Utilidades de formato y seguridad
+ * -----------------------------
  * Devuelve un mensaje de error legible para UI.
  * Prioriza error.message y, si no existe, usa el fallback recibido.
  */

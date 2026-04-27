@@ -1,5 +1,22 @@
-﻿const API_BASE = window.SYSGEM_API_BASE || "http://localhost:3000/api";
+﻿/**
+ * Módulo de login.
+ * Usa DB.js para centralizar conexión de API y persistencia de sesión.
+ */
+const db = window.SYSGEM_DB;
+const dbApiFetch = db?.apiFetch?.bind(db) || ((endpoint, options = {}) => {
+    const headers = {
+        "Content-Type": "application/json",
+        ...(options.headers || {})
+    };
+    const config = { ...options, headers };
+    if (config.body && typeof config.body !== "string") {
+        config.body = JSON.stringify(config.body);
+    }
+    const baseUrl = window.SYSGEM_API_BASE || "http://localhost:3000/api";
+    return fetch(`${baseUrl}${endpoint}`, config);
+});
 
+// Referencias a controles del formulario para evitar múltiples consultas al DOM.
 const form = document.getElementById("login-form");
 const userInput = document.getElementById("input-user");
 const passwordInput = document.getElementById("password-login");
@@ -33,7 +50,7 @@ if (form) {
 
         try {
             const sessionData = await loginAgainstApi(username, password);
-            saveSession(sessionData, Boolean(rememberCheck?.checked));
+            saveSessionData(sessionData, Boolean(rememberCheck?.checked));
             redirectByRole(sessionData.role);
         } catch (error) {
             alert(error.message || "Usuario o contraseña incorrectos.");
@@ -41,6 +58,7 @@ if (form) {
     });
 }
 
+// Acciones secundarias disponibles en la pantalla de login.
 // Botón demo informado como no disponible para evitar falsa expectativa.
 const demoButton = document.getElementById("btn-demo");
 if (demoButton) {
@@ -49,24 +67,28 @@ if (demoButton) {
     });
 }
 
+// Comportamiento al cargar la página: redirección automática cuando ya existe sesión.
 // Si ya existe sesión guardada, redirige automáticamente según rol.
 window.addEventListener("DOMContentLoaded", () => {
-    const savedUser = getSavedUser();
+    const savedUser = getSavedUserData();
     if (savedUser?.role) {
         redirectByRole(savedUser.role);
     }
 });
 
 /**
+ * -----------------------------
+ * Capa de autenticación/API
+ * -----------------------------
  * Ejecuta autenticación contra backend (/auth/login).
  * Retorna un objeto de sesión consistente con id, username, role y token.
  * Lanza error si backend rechaza credenciales o no devuelve rol.
  */
 async function loginAgainstApi(username, password) {
-    const response = await fetch(`${API_BASE}/auth/login`, {
+    const response = await dbApiFetch("/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
+        auth: false,
+        body: { username, password }
     });
 
     const payload = await response.json().catch(() => ({}));
@@ -93,30 +115,37 @@ async function loginAgainstApi(username, password) {
 }
 
 /**
+ * -----------------------------
+ * Persistencia de sesión
+ * -----------------------------
  * Guarda sesión en localStorage o sessionStorage según opción "recordarme".
  * Si remember=true persiste entre cierres de navegador.
  */
-function saveSession(user, remember) {
-    const serialized = JSON.stringify(user);
-
-    if (remember) {
-        localStorage.setItem("user", serialized);
-        sessionStorage.removeItem("user");
+function saveSessionData(user, remember) {
+    if (db?.saveSession) {
+        db.saveSession(user, remember);
         return;
     }
 
-    sessionStorage.setItem("user", serialized);
-    localStorage.removeItem("user");
+    const serialized = JSON.stringify(user);
+    if (remember) {
+        localStorage.setItem("user", serialized);
+        sessionStorage.removeItem("user");
+    } else {
+        sessionStorage.setItem("user", serialized);
+        localStorage.removeItem("user");
+    }
 }
 
 /**
  * Recupera usuario persistido de local/session storage.
  * Retorna null cuando no existe o no se puede parsear.
  */
-function getSavedUser() {
+function getSavedUserData() {
+    if (db?.getCurrentUser) return db.getCurrentUser();
+
     const raw = localStorage.getItem("user") || sessionStorage.getItem("user");
     if (!raw) return null;
-
     try {
         return JSON.parse(raw);
     } catch (_error) {
@@ -125,6 +154,9 @@ function getSavedUser() {
 }
 
 /**
+ * -----------------------------
+ * Navegación por rol
+ * -----------------------------
  * Redirige al panel adecuado de acuerdo al rol del usuario autenticado.
  * Muestra alerta si el rol no está mapeado.
  */
