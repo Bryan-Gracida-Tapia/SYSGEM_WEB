@@ -6,6 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="1e5b9679-5401-4344-9c6e-f7f3bcdbea3e" name="Changes" comment="Creación de los scripts dinamicos de gestión de cargos">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/header_panel_control.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/header_panel_control.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JavaScripts/gestion_cargos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/JavaScripts/gestion_cargos.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JavaScripts/gestion_cargos_comuneros.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/JavaScripts/gestion_cargos_comuneros.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JavaScripts/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/JavaScripts/global.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JavaScripts/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/JavaScripts/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/gestion_cargos.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/gestion_cargos.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/gestion_cargos_comuneros.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/gestion_cargos_comuneros.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,6 +75,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHELLCHECK.PATH": "/home/ryangt/.local/share/JetBrains/WebStorm2026.1/Shell Script/shellcheck",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "git-widget-placeholder": "Feature----Bryan",
     "javascript.preferred.runtime.type.id": "node",
@@ -82,7 +92,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3bd3a6803838-JavaScript-WS-261.22158.274" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-WS-261.23567.141" />
       </set>
     </attachedChunks>
   </component>
@@ -97,6 +107,7 @@
       <workItem from="1776785948184" duration="257000" />
       <workItem from="1776954365105" duration="3596000" />
       <workItem from="1777039879108" duration="741000" />
+      <workItem from="1777299918817" duration="3842000" />
     </task>
     <task id="LOCAL-00001" summary="Creación de la interfas de gestión de cargos">
       <option name="closed" value="true" />
