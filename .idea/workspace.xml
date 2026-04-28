@@ -4,17 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e5b9679-5401-4344-9c6e-f7f3bcdbea3e" name="Changes" comment="Creación de los scripts dinamicos de gestión de cargos">
+    <list default="true" id="1e5b9679-5401-4344-9c6e-f7f3bcdbea3e" name="Changes" comment="Refactorización de los estilos y estructura del header: simplificación de reglas CSS y mejora de la disposición HTML">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/header_panel_control.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/header_panel_control.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/JavaScripts/gestion_cargos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/JavaScripts/gestion_cargos.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/JavaScripts/gestion_cargos_comuneros.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/JavaScripts/gestion_cargos_comuneros.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/JavaScripts/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/JavaScripts/global.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/JavaScripts/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/JavaScripts/login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/gestion_cargos.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/gestion_cargos.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/gestion_cargos_comuneros.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/gestion_cargos_comuneros.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JavaScripts/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/JavaScripts/server.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +15,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="17" />
+    <option name="cachedIndexableFilesCount" value="19" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -70,6 +63,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "DefaultHtmlFileTemplate": "HTML File",
+    "Node.js.login.js.executor": "Run",
+    "Node.js.server.js.executor": "Run",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
@@ -85,10 +80,29 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "npm.start:api.executor": "Run",
     "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "/snap/webstorm/601/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="start:api" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start:api" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.start:api" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -107,7 +121,8 @@
       <workItem from="1776785948184" duration="257000" />
       <workItem from="1776954365105" duration="3596000" />
       <workItem from="1777039879108" duration="741000" />
-      <workItem from="1777299918817" duration="3842000" />
+      <workItem from="1777299918817" duration="4313000" />
+      <workItem from="1777385672854" duration="4832000" />
     </task>
     <task id="LOCAL-00001" summary="Creación de la interfas de gestión de cargos">
       <option name="closed" value="true" />
@@ -157,7 +172,55 @@
       <option name="project" value="LOCAL" />
       <updated>1777046795885</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Actualización y mejora de comentarios en vistas, scripts y componentes">
+      <option name="closed" value="true" />
+      <created>1777305140386</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1777305140387</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Centralización de la capa HTTP y autenticación, mejoras en la estructura y comentarios de los scripts">
+      <option name="closed" value="true" />
+      <created>1777305160800</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1777305160800</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Centralización de la conexión API en `DB.js` y reducción de código repetido en scripts de gestión y login">
+      <option name="closed" value="true" />
+      <created>1777305172326</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1777305172326</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Centralización de la conexión y estructura del sistema: nuevo módulo `DB.js` para conexión API y documento base de datos">
+      <option name="closed" value="true" />
+      <created>1777305183460</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1777305183460</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Creación del servidor básico en Node.js con Express y conexión a MySQL">
+      <option name="closed" value="true" />
+      <created>1777387787131</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1777387787131</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Refactorización de los estilos y estructura del header: simplificación de reglas CSS y mejora de la disposición HTML">
+      <option name="closed" value="true" />
+      <created>1777387904040</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1777387904040</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -193,6 +256,12 @@
     <MESSAGE value="Creacion del header de gestión de cargos" />
     <MESSAGE value="Creación del script de index" />
     <MESSAGE value="Creación de los scripts dinamicos de gestión de cargos" />
-    <option name="LAST_COMMIT_MESSAGE" value="Creación de los scripts dinamicos de gestión de cargos" />
+    <MESSAGE value="Actualización y mejora de comentarios en vistas, scripts y componentes" />
+    <MESSAGE value="Centralización de la capa HTTP y autenticación, mejoras en la estructura y comentarios de los scripts" />
+    <MESSAGE value="Centralización de la conexión API en `DB.js` y reducción de código repetido en scripts de gestión y login" />
+    <MESSAGE value="Centralización de la conexión y estructura del sistema: nuevo módulo `DB.js` para conexión API y documento base de datos" />
+    <MESSAGE value="Creación del servidor básico en Node.js con Express y conexión a MySQL" />
+    <MESSAGE value="Refactorización de los estilos y estructura del header: simplificación de reglas CSS y mejora de la disposición HTML" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactorización de los estilos y estructura del header: simplificación de reglas CSS y mejora de la disposición HTML" />
   </component>
 </project>
