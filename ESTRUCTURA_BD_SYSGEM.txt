@@ -1,0 +1,250 @@
+ESTRUCTURA RECOMENDADA DE BASE DE DATOS (SYSGEM)
+
+Objetivo:
+Definir una estructura mínima y consistente para que las interfaces actuales
+(login, gestión de comuneros y gestión/asignación de cargos) funcionen correctamente.
+
+====================================================================
+1) TABLAS PRINCIPALES
+====================================================================
+
+1.1) usuarios
+- id (PK, bigint/autoincrement o uuid)
+- username (varchar, unique, not null)
+- password_hash (varchar, not null)
+- role (enum: 'admin', 'secretaria', 'comunero') not null
+- comunero_id (FK nullable -> comuneros.id)  [solo si el usuario representa a un comunero]
+- activo (boolean, default true)
+- created_at (timestamp)
+- updated_at (timestamp)
+
+Notas:
+- El endpoint /auth/login debe devolver al menos: id, username, role, token.
+- role es obligatorio para redirección de frontend.
+
+
+1.2) comuneros
+- id (PK)
+- nombre_completo (varchar, not null)
+- fecha_nacimiento (date, not null)
+- estado_civil (enum: 'soltero', 'casado', 'union_libre')
+- tipo (enum: 'originario', 'residente')
+- direccion (varchar)
+- correo (varchar, unique, not null)
+- estado (enum: 'activo', 'inactivo', 'baja', default 'inactivo')
+- fecha_inicio (date o timestamp, nullable)
+- created_at (timestamp)
+- updated_at (timestamp)
+
+Mapeo con frontend:
+- nombre_completo -> nombre/nombreCompleto
+- fecha_nacimiento -> fechaNacimiento
+- estado -> estado/status
+- tipo -> tipo/type
+- direccion -> direccion/address
+- correo -> correo/email
+
+
+1.3) cargos
+- id (PK)
+- nombre (varchar, unique, not null)
+- descripcion (text, nullable)
+- activo (boolean, default true)
+- created_at (timestamp)
+- updated_at (timestamp)
+
+Mapeo con frontend:
+- id -> id/_id
+- nombre -> nombre/name
+
+
+1.4) asignaciones_cargo
+- id (PK)
+- comunero_id (FK -> comuneros.id, not null)
+- cargo_id (FK -> cargos.id, not null)
+- fecha_inicio (date/timestamp, not null)
+- fecha_fin (date/timestamp, nullable)
+- activo (boolean, default true)
+- creado_por_usuario_id (FK -> usuarios.id, nullable)
+- created_at (timestamp)
+- updated_at (timestamp)
+
+Regla:
+- Si activo = true, fecha_fin debe ser null.
+- Al crear nueva asignación activa, cerrar asignación activa anterior del mismo cargo si aplica.
+
+
+1.5) comunero_cargos_cumplidos
+- id (PK)
+- comunero_id (FK -> comuneros.id, not null)
+- cargo (varchar, not null)
+- year (int, nullable)
+- created_at (timestamp)
+
+Origen:
+- Se llena desde el formulario "cargosCumplidos" al crear/editar comunero.
+
+
+1.6) servicios (opcional pero recomendado para estadísticas)
+- id (PK)
+- nombre (varchar, not null)
+- estado (enum: 'activo', 'inactivo', default 'activo')
+- created_at (timestamp)
+- updated_at (timestamp)
+
+Uso:
+- Permite calcular serviciosActivos para el resumen en gestión de cargos.
+
+====================================================================
+2) RELACIONES
+====================================================================
+
+- usuarios.comunero_id -> comuneros.id (0..1 a 1)
+- asignaciones_cargo.comunero_id -> comuneros.id (N a 1)
+- asignaciones_cargo.cargo_id -> cargos.id (N a 1)
+- comunero_cargos_cumplidos.comunero_id -> comuneros.id (N a 1)
+
+====================================================================
+3) INDICES RECOMENDADOS
+====================================================================
+
+- usuarios(username) UNIQUE
+- comuneros(correo) UNIQUE
+- comuneros(estado)
+- comuneros(nombre_completo)
+- cargos(nombre) UNIQUE
+- asignaciones_cargo(comunero_id, activo)
+- asignaciones_cargo(cargo_id, activo)
+- asignaciones_cargo(fecha_inicio)
+- comunero_cargos_cumplidos(comunero_id)
+
+====================================================================
+4) COMPATIBILIDAD CON ENDPOINTS QUE USA TU FRONTEND
+====================================================================
+
+4.1) POST /auth/login
+Entrada:
+- username
+- password
+
+Salida mínima esperada:
+{
+  "user": {
+    "id": 1,
+    "username": "admin",
+    "role": "admin"
+  },
+  "token": "jwt_o_token"
+}
+
+
+4.2) GET /dashboard/comuneros (o /comuneros/dashboard o /comuneros)
+Salida compatible (ejemplo):
+{
+  "comuneros": [
+    {
+      "id": 1,
+      "nombreCompleto": "Juan Perez",
+      "estado": "activo",
+      "fechaInicio": "2026-01-10",
+      "fechaNacimiento": "1995-08-12",
+      "estadoCivil": "casado",
+      "tipo": "originario",
+      "direccion": "Calle 1",
+      "correo": "juan@mail.com"
+    }
+  ],
+  "estadisticas": {
+    "comunerosTotales": 120,
+    "comunerosActivos": 90,
+    "comunerosInactivos": 20,
+    "dadosDeBaja": 10
+  }
+}
+
+
+4.3) POST /comuneros
+Entrada esperada por frontend:
+{
+  "nombreCompleto": "...",
+  "fechaNacimiento": "YYYY-MM-DD",
+  "estadoCivil": "soltero|casado|union_libre",
+  "tipo": "originario|residente",
+  "direccion": "...",
+  "correo": "...",
+  "password": "...",
+  "cargosCumplidos": [
+    { "cargo": "Tesorero", "year": "2022" }
+  ]
+}
+
+
+4.4) PATCH/PUT /comuneros/:id
+- Actualiza datos generales del comunero.
+- Si llega password vacío en edición, no sobrescribir hash.
+
+
+4.5) PATCH/PUT /comuneros/:id/estado
+Entrada:
+{ "estado": "activo|inactivo" }
+
+
+4.6) DELETE /comuneros/:id (o POST /comuneros/:id/baja)
+- Debe marcar estado = 'baja' o realizar baja lógica equivalente.
+
+
+4.7) GET /dashboard/cargos (o /cargos/dashboard)
+Salida compatible (ejemplo):
+{
+  "comunerosActivos": [
+    {
+      "id": 5,
+      "nombre": "Ana Lopez",
+      "cargo": "Secretaria",
+      "fechaInicio": "2026-03-01"
+    }
+  ],
+  "cargosDisponibles": [
+    { "id": 10, "nombre": "Tesorero" }
+  ],
+  "comuneroPendiente": {
+    "id": 9,
+    "nombre": "Carlos Ruiz"
+  },
+  "estadisticas": {
+    "comunerosTotales": 120,
+    "cargosActivos": 12,
+    "cargosInactivos": 8,
+    "serviciosActivos": 5
+  }
+}
+
+
+4.8) POST /cargos/asignar (o /asignaciones/cargos)
+Entrada:
+{
+  "cargoId": 10,
+  "comuneroId": 9
+}
+
+Efecto esperado:
+- Crear asignación activa en asignaciones_cargo.
+- Actualizar campos necesarios para reflejarlo en dashboard.
+
+====================================================================
+5) REGLAS DE NEGOCIO MINIMAS
+====================================================================
+
+- Estados válidos de comunero: activo, inactivo, baja.
+- Roles válidos de usuario: admin, secretaria, comunero.
+- Todo endpoint protegido (excepto login) debe aceptar Bearer token.
+- Los dashboards deben tolerar datos vacíos y responder arreglos vacíos.
+- Fechas en formato ISO (YYYY-MM-DD o timestamp ISO8601).
+
+====================================================================
+6) SQL DE REFERENCIA (MINIMO)
+====================================================================
+
+Puedes implementar en MySQL/PostgreSQL equivalente con estas entidades y constraints.
+El nombre de columnas puede variar, pero mantén mapeo consistente con el backend JSON.
+

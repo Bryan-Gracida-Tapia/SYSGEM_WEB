@@ -1,0 +1,133 @@
+/* ------------------------------
+      Variables, reset y base
+      ------------------------------ */
+:root{
+    --bg: #f6f8fb;
+    --card: #ffffff;
+    --muted: #6b7280;
+    --accent: #2563EB; /* azul principal */
+    --accent-2: #5987ec; /* secundario */
+    --danger: #ef4444;
+    --success: #16a34a;
+    --radius: 12px;
+    --shadow-soft: 0 10px 30px rgba(11,78,183,0.08);
+    --shadow-subtle: 0 6px 18px rgba(9,30,66,0.06);
+    --shadow: 0 8px 20px rgba(16,24,40,0.06);
+    --gap: 1rem;
+    --container-w: 1100px;
+    --max-width-desktop: 420px;
+    --input-height: 3.2rem;
+    font-size: 16px;
+}
+*{box-sizing:border-box}
+html,body{
+    height:100%
+}
+body{
+    margin:0;
+    font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(180deg,#f7fbff 0%, var(--bg) 100%);
+    color:#0f172a;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:1rem;
+    display:flex;
+    justify-content:center;
+}
+.dashboard{
+    display:grid;
+    gap: 18px;
+    align-items: center;
+    width:100%;
+    max-width:var(--container-w);
+}
+/* ////////////////////////////////////////////////////////////////////////////////////////////////// Top Navigation */
+.topnav{
+    display:flex;
+    align-items:center;
+    background:var(--card);
+    padding:0.75rem 1rem;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    margin-bottom:1rem;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.topnav__container{
+    display:flex;
+    align-items:center;
+    width:100%; /* 🔥 IMPORTANTE */
+}
+
+/* IZQUIERDA */
+.topnav__brand{
+    display:flex;
+    align-items:center;
+    gap:0.75rem;
+    font-weight:700;
+}
+
+/* LOGO */
+.topnav__logo{
+    max-width:2rem;
+}
+
+/* CENTRO REAL */
+.topnav__nav{
+    display:flex;
+    gap:0.5rem;
+    margin: 0 auto; /* 🔥 CENTRA */
+}
+
+/* LINKS */
+.topnav__link{
+    text-decoration:none;
+    color:var(--muted);
+    font-weight:600;
+    padding:0.45rem 0.6rem;
+    border-radius:10px;
+    transition:all .2s ease;
+}
+
+/* DERECHA */
+.topnav__logout{
+    margin-left:auto; /* 🔥 EMPUJA A LA DERECHA */
+    white-space: nowrap;
+    background: #fff;
+    color: var(--muted);
+    font-weight:600;
+    border: none;
+    padding:0.45rem 0.6rem;
+    border-radius:10px;
+    transition:all .2s ease;
+}
+
+/* HOVER */
+.topnav__logout:hover{
+    background: #ef6262;
+    color: #fff;
+}
+
+.topnav__link:hover{
+    background:#f1f5ff;
+    color:var(--accent);
+}
+
+/* ACTIVO */
+.topnav__link--active{
+    background:#eef2ff;
+    color:var(--accent);
+}
+/* ////////////////////////////////////////////////////////////////////////////////////////////////// Footer
+ */
+.footer{
+    margin-top: 1rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+.footer a{
+    color: var(--muted);
+    text-decoration: underline;
+    margin-left: 0.6rem;
+}

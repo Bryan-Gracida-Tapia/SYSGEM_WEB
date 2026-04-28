@@ -1,0 +1,763 @@
+/* ////////////////////////////////////////////////////////////////////////////////////////////////// Panel de control de cargos
+/* ------------------------------
+      Layout: gestión de cargos: Comuneros Activos
+      ------------------------------ */
+.dashboard{
+    display: grid;
+    grid-template-columns:1fr 360px;
+    gap:1rem;
+    align-items: start;
+}
+
+main{
+    unicode-bidi: isolate;
+}
+.card{
+    background:var(--card);
+    padding:18px;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    margin-top: 12px;
+}
+
+.card__title{
+    margin:0 0 8px 0;
+}
+
+.card__description{
+    margin:0 0 12px 0;
+    color:var(--muted);
+}
+
+.card__people{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+.person-card{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    padding:12px;
+    background:var(--card);
+    border-radius:12px;
+    box-shadow:var(--shadow-subtle);
+    transition:transform .2s ease, box-shadow .2s ease;
+}
+
+.person-card:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--shadow-soft);
+}
+
+.person-card__avatar{
+    width:64px;
+    height:64px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    background:#eef7fb;
+    color:var(--accent);
+}
+
+.person-card__info{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.person-card__header{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.person-card__name{
+    font-weight:700;
+}
+
+.person-card__position{
+    font-weight:600;
+    color:var(--accent);
+}
+
+.person-card__role{
+    color:var(--muted);
+    font-size:0.95rem;
+}
+/* ------------------------------
+      Layout: gestión de cargos: Ruleta de asignación de cargos
+      ------------------------------ */
+.card__assign{
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+.card__container{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.card__container-select{
+    padding: 0.55rem 0.6rem;
+    border-radius: 8px;
+    border: 1px solid #e6edf6;
+    font-size: 0.95rem;
+}
+div{
+    unicode-bidi: isolate;
+}
+.card__button{
+    width: 100%;
+    height: 3.6rem;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(11, 78, 183, 0.14);
+    transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+}
+
+.card__roulette{
+    margin-top: 12px;
+    height: 160px;
+    border-radius: 10px;
+    background: #f3f4f6;
+    border: 2px dashed #e6eef5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+}
+.card__roulette-icon{
+    font-size: 20px;
+}
+
+.card__message{
+    margin-top:12px;
+    color: var(--muted);
+    font-weight: 600;
+}
+/* ------------------------------
+      Layout: gestión de cargos: Estadisticas
+      ------------------------------ */
+.card__stats{
+    display:flex;
+    gap:12px;
+    margin-top:12px;
+    flex-wrap: wrap;
+}
+.card__stats-container{
+    min-width:160px;
+    background:linear-gradient(180deg, rgba(14,165,233,0.06), var(--card));
+    padding:12px;
+    border-radius:12px;
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+.card__value{
+    font-weight:800;
+    font-size:1.3rem;
+}
+.card__label{
+    color:var(--muted);
+    font-size:0.95rem;
+}
+
+/* ////////////////////////////////////////////////////////////////////////////////////////////////// Panel de control de cargos-comuneros
+ */
+.action-card__info{
+    flex-direction: column;
+}
+.action-card__name{
+    font-weight: 700;
+}
+.action-card__description{
+    font-size: 0.85rem;;
+    color: var(--muted);
+}
+/* ------------------------------
+      Layout: gestión de cargos: acciones disponibles
+      ------------------------------ */
+.action-card__info{
+    display:flex;
+    gap:0.75rem;
+    flex-wrap: wrap;
+}
+.action-card__header{
+    flex: 1 1 180px;
+    display:flex;
+    gap:0.75rem;
+    align-items: center;
+    padding: 0.8rem;
+    border-radius:10px;
+    background: linear-gradient(180deg, rgba(37, 99,235, 0.04), var(--card));
+}
+.card__action{
+    display:flex;
+    gap:0.75rem;
+    flex-wrap: wrap;
+}
+.action-card{
+    display:flex;
+    gap:0.75rem;
+    flex: 1 1 180px;
+    align-items: center;
+    padding: 0.8rem;
+    border-radius:10px;
+    background: linear-gradient(180deg, rgba(37, 99, 235, 0.04), var(--card));
+    border: 1px solid #eef3fb;
+    cursor: pointer;
+    transition: transform .14s ease, box-shadow .14s ease;
+    user-select: none;
+}
+.action-card__avatar{
+    width:48px;
+    height:48px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: #ffffff;
+    box-shadow: 0 6px 14px rgba(16, 24, 40, 0.04);
+    font-size: 1.15rem;
+    color:  var(--accent);
+}
+.action-card__info{
+    display:flex;
+    gap:0.75rem;
+    flex-wrap: wrap;
+}
+.action-card__header{
+    display : flex;
+}
+/* ------------------------------
+      Layout: gestión de cargos: gestión de comuneros
+      ------------------------------ */
+.card__managetop{
+    display: flex;
+    gap:0.75rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+.card__managetop-left{
+    display: flex;
+    gap:0.75rem;
+    align-items: center;
+}
+.card__description--gestion{
+    margin-left: 0.6rem;
+    color: var(--muted);
+}
+.card__managetop--btn{
+    padding: 0.5rem 0.75rem;
+    border-radius:10px;
+    border: 1px solid #e6edf6;
+    background: transparent;
+    font-weight: 700;
+    cursor: pointer;
+}
+.search__top{
+    width: 100%;
+    padding: 0.6rem;
+    border-radius:10px;
+    border: 1px solid #e6edf6;
+}
+.card__list{
+    display: flex;
+    flex-direction: column;
+    gap:0.6rem;
+    padding: 1.25rem;
+}
+.card__item{
+    display: flex;
+    gap:0.75rem;
+    align-items: center;
+    padding: 0.6rem;
+    border-radius:10px;
+    border : 1px solid #eef3fb;
+    transition: background .12s ease;
+}
+.card__item:hover{
+    cursor: pointer;
+}
+.card__avatar{
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #e6edf6;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+.card__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.card__name{
+    font-weight: 700;
+}
+.card__actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+.card__btn {
+    padding: 0.45rem 0.6rem;
+    border-radius: 8px;
+    border: 1px solid #e6edf6;
+    font-weight: 700;
+    cursor: pointer;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.card__button:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+}
+
+.card__btn--success {
+    background: #ecfdf5;
+    border-color: #bbf7d0;
+    color: var(--success);
+}
+
+.card__btn--warning {
+    background: #fff7ed;
+    border-color: #fed7aa;
+    color: #b45309;
+}
+
+.card__btn--edit {
+    background: #edf6ff;
+    border-color: #aacafe;
+    color: #0961b4;
+}
+
+.card__btn--danger {
+    background: #fff1f2;
+    border-color: #fca5a5;
+    color: var(--danger);
+}
+/* ------------------------------
+      Layout: gestión de cargos: formulario
+      ------------------------------ */
+.form{
+    margin-top: 0.8rem;
+}
+.form__grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+}
+.form__group--full{
+    grid-column: 1 / -1;
+}
+.form__group{
+    display: flex;
+    flex-direction: column;
+    gap:0.4rem;
+}
+/* ---------------------------------- Etiquetas y input -- */
+.form__label{
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+.form__input{
+    padding: 0.55rem 0.6rem;
+    border-radius:8px;
+    border: 1px solid #e6edf6;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+/* ---------------------------------- Radio -- */
+.form__options{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+.form__option{
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.form__radio{
+    accent-color: #3b82f6;
+    cursor: pointer;
+}
+.form__option-label{
+    color: #0f172a;
+}
+
+/* ---------------------------------- Botones -- */
+.form__actions{
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+}
+
+/* Base */
+.form__button{
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    border: 1px solid #e6edf6;
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.form__button:hover{
+    background: #f8fafc;
+}
+
+.form__button--primary{
+    background: var(--accent);
+    color: #fff;
+    border: none;
+}
+
+.form__button--primary:hover{
+    background: #2563eb;
+}
+
+.form__button--add{
+    background: var(--success);
+    color: #fff;
+    border: none;
+}
+
+.form__button--add:hover{
+    background: #059669;
+}
+/* ---------------------------------- Contraseña -- */
+.form__toggle{
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 0.25rem 0.4rem;
+    color:  var(--muted);
+}
+
+/* ------------------------------
+      Layout: gestión de cargos: resumen
+      ------------------------------ */
+.summary-card{
+    background: var(--card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-soft);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
+    overflow: visible;
+}
+.summary-card__title{
+    margin: 0;
+}
+
+.summary-card__description{
+    color: var(--muted);
+    margin-top: 8px;
+}
+
+.summary-card__stats{
+    margin-top: 12px;
+}
+
+.summary-card__stat{
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.summary-card__label{
+    color: var(--muted);
+}
+
+.summary-card__value{
+    font-weight: 800;
+}
+
+.summary-card__btn{
+    padding: 0.5rem 0.75rem;
+    border-radius: 10px;
+    border: 1px solid #e6edf6;
+    background: transparent;
+    font-weight: 700;
+    cursor: pointer;
+}
+.summary-card--addition{
+    margin-top: 12px;
+}
+/* ////////////////////////////////////////////////////////////////////////////////////////////////// Gestión de anuncios
+ */
+.dashboard__section--news{
+    margin-bottom: 0.8rem;
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+}
+.card__managetop--new{
+    display: flex;
+    flex-direction: column;
+}
+.form__flex{
+    display: flex;
+    flex-direction: column;
+    gap:0.9rem;
+    margin: 0.85rem;
+}
+.action_news{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.actions__button{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.14);
+}/* ////////////////////////////////////////////////////////////////////////////////////////////////// Perfil
+ */
+.shortcuts{
+    display: flex;
+    gap: 1rem;
+    overflow: auto;
+    padding-bottom: 0.25rem;
+    margin-bottom: 1rem;
+}
+.shortcut{
+    display: flex;
+    flex: 0 0 32%;
+    min-width: 10rem;
+    background: var(--card);
+    padding: 0.9rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+    cursor: pointer;
+}
+.shortcut__icon{
+    width: 2.4rem;
+    height: 2.4rem;
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef9ff;
+    color: var(--accent-2);
+    font-weight: 700;
+}
+.shortcut span{
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+.profile{
+    background: var(--card);
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+    box-shadow: var(--shadow);
+    margin-bottom: 1rem;
+}
+.profile__letf{
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+.profile__icon{
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(180deg,#e6f6ff,#dff6fb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: var(--accent-2);
+    font-size: 1.35rem;
+    box-shadow: 0 6px 14px rgba(10,20,40,0.06);
+    flex-shrink: 0;
+}
+.profile__info{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.profile__name{
+    font-weight: 800;
+    font-size: 1rem;
+}
+.profile__status{
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+.card__stats--grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.6rem;
+}
+.information{
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+.information__box{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.card__stats--profile{
+    background: var(--card);
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: flex-start;
+}
+.card__stats--flex{
+    display: flex;
+    flex-direction: column;
+}
+.card__stats-view{
+    margin-top: 1rem;
+}
+/* ////////////////////////////////////////////////////////////////////////////////////////////////// Login */
+.container-login{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80vw;
+    height: 80vh;
+}
+.brand{
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.brand__logo{
+    width: 3.25rem;
+    height: 3.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(11,94,215,0.12), rgba(6,182,212,0.06));
+    box-shadow: var(--shadow-subtle);
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1.15rem;
+}
+.header{
+    margin-top: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.25rem;
+}
+.row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1rem;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+.field{
+    margin: 1rem;
+}
+.field input{
+    width: 100%;
+    height: var(--input-height);
+    padding: 0 3.5rem 0 3.5rem;
+    border-radius: 10px;
+    border: 1px solid rgba(15,23,42,0.06);
+    background: #fbfdff;
+    font-size: 1rem;
+    outline: none;
+    transition: box-shadow .18s ease,
+    border-color .18s ease, transform .12s ease;
+}
+.checkbox{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.checkbox input{
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--accent);
+}
+.forgot{
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 600;
+}
+.form__actions--login{
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.4rem;
+    gap: 0.6rem;
+}
+.form__button--login{
+    width: 100%;
+    height: 3.6rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(11,78,183,0.14);
+    transition: transform .12s ease, box-shadow
+    .12s ease, opacity .12s ease;
+}
+.form__button--demo{
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    text-align: center;
+    padding: 0.35rem 0;
+}
