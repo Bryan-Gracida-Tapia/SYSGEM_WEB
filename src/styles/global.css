@@ -45,8 +45,6 @@ body{
 .topnav{
     display:flex;
     align-items:center;
-    justify-content:space-between;
-    gap:0.75rem;
     background:var(--card);
     padding:0.75rem 1rem;
     border-radius:var(--radius);
@@ -54,6 +52,14 @@ body{
     margin-bottom:1rem;
 }
 
+/* CONTENEDOR PRINCIPAL */
+.topnav__container{
+    display:flex;
+    align-items:center;
+    width:100%; /* 🔥 IMPORTANTE */
+}
+
+/* IZQUIERDA */
 .topnav__brand{
     display:flex;
     align-items:center;
@@ -61,17 +67,19 @@ body{
     font-weight:700;
 }
 
+/* LOGO */
 .topnav__logo{
     max-width:2rem;
 }
 
+/* CENTRO REAL */
 .topnav__nav{
-    flex: 1;
     display:flex;
     gap:0.5rem;
-    align-items:center;
+    margin: 0 auto; /* 🔥 CENTRA */
 }
 
+/* LINKS */
 .topnav__link{
     text-decoration:none;
     color:var(--muted);
@@ -80,7 +88,11 @@ body{
     border-radius:10px;
     transition:all .2s ease;
 }
+
+/* DERECHA */
 .topnav__logout{
+    margin-left:auto; /* 🔥 EMPUJA A LA DERECHA */
+    white-space: nowrap;
     background: #fff;
     color: var(--muted);
     font-weight:600;
@@ -89,15 +101,19 @@ body{
     border-radius:10px;
     transition:all .2s ease;
 }
+
+/* HOVER */
 .topnav__logout:hover{
-    background: #ef6262;   /* rojo */
-    color: #fff;           /* texto blanco */
+    background: #ef6262;
+    color: #fff;
 }
+
 .topnav__link:hover{
     background:#f1f5ff;
     color:var(--accent);
 }
 
+/* ACTIVO */
 .topnav__link--active{
     background:#eef2ff;
     color:var(--accent);
