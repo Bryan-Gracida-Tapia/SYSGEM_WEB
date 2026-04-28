@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Configuración base de la vista y recursos globales -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Módulo de Gestión y Control de Cargos y Servicios</title>
+    <link rel="stylesheet" href="../styles/style.css" />
+    <link rel="stylesheet" href="../styles/global.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- URL base para todas las llamadas del frontend hacia la API -->
+    <script>
+        window.SYSGEM_API_BASE = window.SYSGEM_API_BASE || "http://localhost:3000/api";
+    </script>
+</head>
+<body>
+<!-- Contenedor -->
+<div class="container">
+    <div class="container__header">
+        <!-- Header -->
+        <header class="topnav" id="topnav"></header>
+        <main class="dashboard">
+            <!-- Columna principal: cards operativas del módulo de cargos -->
+            <section class="dashboard__section">
+                <!-- Lista de comuneros con cargos activos -->
+                <article class="card">
+                    <h2 class="card__title">Comuneros Activos</h2>
+                    <p class="card__description">Lista de comuneros con cargos activos y su fecha de inicio</p>
+                    <div class="card__people" id="active-roles-list">
+                        <div class="person-card">
+                            <div class="person-card__info">
+                                <div class="person-card__role">Cargando datos...</div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Ruleta/asignador de cargos disponibles -->
+                <article class="card">
+                    <h3 class="card__title">Ruleta de asignación de cargos</h3>
+                    <p class="card__description">Selecciona un cargo para asignar</p>
+                    <div class="card__assign">
+                        <label class="card__container" for="cargo-select">
+                            <select class="card__container-select" id="cargo-select">
+                                <option value="">-- Seleccionar cargo</option>
+                            </select>
+                            <button class="card__button" id="asignar-btn" type="button">Asignar a comunero pendiente</button>
+                        </label>
+                    </div>
+                    <div class="card__roulette">
+                        <div class="card__roulette-container">
+                            <i class="card__roulette-icon fa-solid fa-circle-notch fa-spin"></i>
+                        </div>
+                    </div>
+                    <div class="card__message">
+                        <span id="roulette-message">Selecciona un cargo y asigna.</span>
+                    </div>
+                </article>
+
+                <!-- Datos globales del estado de cargos -->
+                <article class="card" id="statistics">
+                    <h3 class="card__title">Estadísticas de cargos y servicios</h3>
+                    <div class="card__stats">
+                        <div class="card__stats-container">
+                            <div class="card__value" id="stat-comuneros-total">0</div>
+                            <div class="card__label">Comuneros Totales</div>
+                        </div>
+                        <div class="card__stats-container">
+                            <div class="card__value" id="stat-cargos-activos">0</div>
+                            <div class="card__label">Cargos Activos</div>
+                        </div>
+                        <div class="card__stats-container">
+                            <div class="card__value" id="stat-cargos-inactivos">0</div>
+                            <div class="card__label">Cargos Inactivos</div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Columna lateral: resumen rápido y notas -->
+            <aside class="dashboard__aside">
+                <div class="card">
+                    <!-- Tarjeta de indicadores resumidos -->
+                    <div class="summary-card">
+                        <h4 class="summary-card__title">Resumen rápido</h4>
+                        <p class="summary-card__description">Panel con información resumida del estado de cargos y servicios</p>
+                        <div class="summary-card__stats">
+                            <div class="summary-card__stat">
+                                <span class="summary-card__label">Comuneros</span>
+                                <span class="summary-card__value" id="summary-comuneros">0</span>
+                            </div>
+                            <div class="summary-card__stat">
+                                <span class="summary-card__label">Servicios Activos</span>
+                                <span class="summary-card__value" id="summary-servicios-activos">0</span>
+                            </div>
+                            <div class="summary-card__stat">
+                                <span class="summary-card__label">Cargos Activos</span>
+                                <span class="summary-card__value" id="summary-cargos-activos">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta auxiliar para recordatorios -->
+                    <div class="summary-card summary-card--addition">
+                        <h4 class="summary-card__title">Notas</h4>
+                        <p class="summary-card__description">Apartado para anotar recordatorios.</p>
+                        <input class="summary-card__notes" type="text" aria-label="Notas rápidas" />
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Footer inyectado dinámicamente -->
+        <footer class="footer" id="footer"></footer>
+    </div>
+</div>
+
+<!-- Capa compartida de conexión/API + scripts de sesión y módulo -->
+<script src="../JavaScripts/DB.js"></script>
+<script src="../JavaScripts/global.js"></script>
+<script src="../JavaScripts/gestion_cargos.js"></script>
+<!-- Carga dinámica de componentes compartidos (header y footer) -->
+<script>
+    fetch('../Components/header_panel_control.html')
+        .then((res) => res.text())
+        .then((html) => {
+            document.getElementById('topnav').innerHTML = html;
+            initLogout();
+            renderUser();
+        });
+
+    fetch('../Components/footer.html')
+        .then((res) => res.text())
+        .then((html) => {
+            document.getElementById('footer').innerHTML = html;
+        })
+        .catch(() => {
+            document.getElementById('footer').textContent = 'SYSGEM';
+        });
+</script>
+</body>
+</html>

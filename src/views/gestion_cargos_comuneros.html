@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Configuración base de la vista y recursos compartidos -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Módulo de Gestión y Control de Cargos y Servicios</title>
+    <link rel="stylesheet" href="../styles/style.css" />
+    <link rel="stylesheet" href="../styles/global.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- URL base de API para peticiones del módulo -->
+    <script>
+        window.SYSGEM_API_BASE = window.SYSGEM_API_BASE || "http://localhost:3000/api";
+    </script>
+</head>
+<body>
+<!-- Estructura principal de la pantalla de gestión de comuneros -->
+<div class="container">
+    <!-- Header compartido, inyectado con fetch -->
+    <header class="topnav" id="topnav"></header>
+
+    <main class="dashboard">
+        <!-- Columna principal con acciones, listado y formulario -->
+        <section class="dashboard__section">
+            <!-- Catálogo visual de acciones disponibles sobre cada comunero -->
+            <article class="card">
+                <h2 class="card__title">Acciones disponibles</h2>
+                <p class="card__description">Acciones disponibles para aplicar sobre los comuneros</p>
+
+                <div class="card__action">
+                    <div class="action-card">
+                        <div class="action-card__avatar" aria-hidden="true">
+                            <i class="action-card__icon fa-solid fa-user-check"></i>
+                        </div>
+                        <div class="action-card__info action-card__info--commmune">
+                            <span class="action-card__name">Activar</span>
+                            <span class="action-card__description">Activar al comunero seleccionado</span>
+                        </div>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-card__avatar" aria-hidden="true">
+                            <i class="action-card__icon fa-solid fa-user-slash"></i>
+                        </div>
+                        <div class="action-card__info action-card__info--commmune">
+                            <span class="action-card__name">Poner Inactivo</span>
+                            <span class="action-card__description">Marcar como inactivo</span>
+                        </div>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-card__avatar" aria-hidden="true">
+                            <i class="action-card__icon fa-solid fa-user-edit"></i>
+                        </div>
+                        <div class="action-card__info action-card__info--commmune">
+                            <span class="action-card__name">Editar</span>
+                            <span class="action-card__description">Editar datos del comunero</span>
+                        </div>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-card__avatar" aria-hidden="true">
+                            <i class="action-card__icon fa-solid fa-user-xmark"></i>
+                        </div>
+                        <div class="action-card__info action-card__info--commmune">
+                            <span class="action-card__name">Dar de Baja</span>
+                            <span class="action-card__description">Eliminar del sistema</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Gestión operativa: búsqueda, listado y alta/edición -->
+            <article class="card">
+                <div class="card__managetop">
+                    <div class="card__managetop-left">
+                        <h3 class="card__title">Gestión de comuneros</h3>
+                        <p class="card__description--gestion">Buscar, editar y administrar el estado de los comuneros</p>
+                    </div>
+                    <div class="card__managetop-right">
+                        <button class="card__managetop--btn" id="btn-open-add" type="button">
+                            <i class="fa-solid fa-user-plus"></i>
+                            Agregar nuevo comunero
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card__managetop--search">
+                    <label for="search-comuneros" hidden>Buscar comuneros</label>
+                    <input class="search__top" type="search" id="search-comuneros" placeholder="Buscar comunero..." />
+                </div>
+                <!-- Mensajes dinámicos -->
+                <div class="card__message">
+                    <span id="comuneros-message">Cargando información...</span>
+                </div>
+
+                <div class="card__list" id="comuneros-list">
+                    <div class="card__item">
+                        <div class="card__info">
+                            <div class="card__description">Cargando comuneros...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulario expandible para registrar o editar comuneros -->
+                <div class="card card--add" id="add-section" aria-hidden="true" hidden>
+                    <h3 class="card__title">Agregar Nuevo Comunero</h3>
+                    <p class="card__description card__description--small">Rellena los datos y agrega los cargos cumplidos. Campos obligatorios marcados con *</p>
+
+                    <form class="form" id="form-add">
+                        <div class="form__grid">
+                            <div class="form__group">
+                                <label class="form__label" for="full-name">Nombre Completo (nombre y apellidos) *</label>
+                                <input class="form__input" type="text" id="full-name" required placeholder="Nombre y apellidos" />
+                            </div>
+
+                            <div class="form__group">
+                                <label class="form__label" for="birthdate">Fecha de Nacimiento *</label>
+                                <input class="form__input" type="date" id="birthdate" required />
+                            </div>
+
+                            <div class="form__group">
+                                <span class="form__label">Estado civil *</span>
+                                <div class="form__options">
+                                    <label class="form__option">
+                                        <input class="form__radio" type="radio" name="civil_status" value="soltero" required>
+                                        <span class="form__option-label">Soltero</span>
+                                    </label>
+                                    <label class="form__option">
+                                        <input class="form__radio" type="radio" name="civil_status" value="casado">
+                                        <span class="form__option-label">Casado</span>
+                                    </label>
+                                    <label class="form__option">
+                                        <input class="form__radio" type="radio" name="civil_status" value="union_libre">
+                                        <span class="form__option-label">Unión libre</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form__group">
+                                <span class="form__label">Tipo *</span>
+                                <div class="form__options">
+                                    <label class="form__option">
+                                        <input class="form__radio" type="radio" name="type" value="originario" required>
+                                        <span class="form__option-label">Originario</span>
+                                    </label>
+                                    <label class="form__option">
+                                        <input class="form__radio" type="radio" name="type" value="residente">
+                                        <span class="form__option-label">Residente</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form__group">
+                                <label class="form__label" for="address">Residencia actual *</label>
+                                <input class="form__input" type="text" id="address" required placeholder="Dirección" />
+                            </div>
+
+                            <div class="form__group">
+                                <label class="form__label" for="email">Correo Electrónico *</label>
+                                <input class="form__input" type="email" id="email" required placeholder="correo@ejemplo.com" />
+                            </div>
+
+                            <div class="form__group form__group--password">
+                                <label class="form__label" for="password">Contraseña *</label>
+                                <div class="form__password">
+                                    <input class="form__input" type="password" id="password" required placeholder="Contraseña segura" />
+                                    <button type="button" class="form__toggle" id="toggle-password" aria-label="Mostrar contraseña">Mostrar</button>
+                                </div>
+                            </div>
+
+                            <div class="form__group form__group--full">
+                                <label class="form__label" for="profile-photo">Foto de Perfil</label>
+                                <input class="form__input" type="file" id="profile-photo" accept="image/*" />
+                                <div class="form__help" id="photo-filename">Ningún archivo seleccionado</div>
+                            </div>
+                        </div>
+
+                        <div class="form__section">
+                            <div class="form__section-header">
+                                <h4 class="form__section-title">Cargos Cumplidos</h4>
+                                <button type="button" class="form__button form__button--add" id="btn-add-cargo">
+                                    <i class="fa-solid fa-plus"></i>
+                                    Agregar Cargo
+                                </button>
+                            </div>
+                            <div id="cargo-fields"></div>
+                        </div>
+
+                        <div class="form__actions">
+                            <button type="button" class="form__button" id="btn-cancel-add">Cancelar</button>
+                            <button type="submit" class="form__button form__button--primary" id="btn-save-comunero">Guardar Comunero</button>
+                        </div>
+                    </form>
+                </div>
+            </article>
+        </section>
+
+        <!-- Barra lateral con indicadores rápidos y acceso a soporte -->
+        <aside class="dashboard__aside">
+            <div class="card">
+                <!-- Resumen estadístico general -->
+                <div class="summary-card">
+                    <h4 class="summary-card__title">Resumen rápido</h4>
+                    <p class="summary-card__description">Estadísticas rápidas del sistema</p>
+                    <div class="summary-card__stats">
+                        <div class="summary-card__stat">
+                            <span class="summary-card__label">Comuneros totales</span>
+                            <span class="summary-card__value" id="summary-total">0</span>
+                        </div>
+                        <div class="summary-card__stat">
+                            <span class="summary-card__label">Comuneros Activos</span>
+                            <span class="summary-card__value" id="summary-activos">0</span>
+                        </div>
+                        <div class="summary-card__stat">
+                            <span class="summary-card__label">Comuneros Inactivos</span>
+                            <span class="summary-card__value" id="summary-inactivos">0</span>
+                        </div>
+                        <div class="summary-card__stat">
+                            <span class="summary-card__label">Dados de baja</span>
+                            <span class="summary-card__value" id="summary-baja">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acción de soporte para atención del usuario -->
+                <div class="summary-card summary-card--addition">
+                    <h4 class="summary-card__title">Soporte</h4>
+                    <p class="summary-card__description">¿Necesitas ayuda con el sistema?</p>
+                    <button class="summary-card__btn" type="button">Contactar al soporte</button>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Footer compartido, cargado de forma dinámica -->
+    <footer class="footer" id="footer"></footer>
+</div>
+
+<!-- Capa compartida de conexión/API + scripts base y del módulo -->
+<script src="../JavaScripts/DB.js"></script>
+<script src="../JavaScripts/global.js"></script>
+<script src="../JavaScripts/gestion_cargos_comuneros.js"></script>
+<!-- Inyección de componentes de navegación y pie de página -->
+<script>
+    fetch('../Components/header_panel_control.html')
+        .then((res) => res.text())
+        .then((html) => {
+            document.getElementById('topnav').innerHTML = html;
+            initLogout();
+            renderUser();
+        });
+
+    fetch('../Components/footer.html')
+        .then((res) => res.text())
+        .then((html) => {
+            document.getElementById('footer').innerHTML = html;
+        })
+        .catch(() => {
+            document.getElementById('footer').textContent = 'SYSGEM';
+        });
+</script>
+</body>
+</html>

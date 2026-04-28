@@ -91,3 +91,16 @@ Diseño de estructura del sistema
 ## 📌 Notas
 Este proyecto fue desarrollado como parte de prácticas académicas.
 Algunas funcionalidades pueden estar incompletas o en proceso de mejora.
+
+---
+
+## 🔌 Conexión API centralizada
+
+Se agregó el archivo `src/JavaScripts/DB.js` para centralizar la conexión del frontend con la API:
+
+- Configuración de URL base (`SYSGEM_API_BASE`)
+- Lectura y limpieza de sesión (`localStorage` / `sessionStorage`)
+- Obtención de token para autenticación Bearer
+- Wrapper `apiFetch()` con serialización JSON automática
+
+Esto reduce código repetido en `login.js`, `gestion_cargos.js` y `gestion_cargos_comuneros.js`.

@@ -1,50 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e5b9679-5401-4344-9c6e-f7f3bcdbea3e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+    <list default="true" id="1e5b9679-5401-4344-9c6e-f7f3bcdbea3e" name="Changes" comment="Creación de los scripts dinamicos de gestión de cargos">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/header_panel_control.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/header_panel_control.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JavaScripts/gestion_cargos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/JavaScripts/gestion_cargos.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JavaScripts/gestion_cargos_comuneros.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/JavaScripts/gestion_cargos_comuneros.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JavaScripts/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/JavaScripts/global.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JavaScripts/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/JavaScripts/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/gestion_cargos.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/gestion_cargos.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/gestion_cargos_comuneros.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/gestion_cargos_comuneros.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="17" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="CSS File" />
+        <option value="HTML File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Feature----Bryan" />
+        <entry key="$PROJECT_DIR$" value="Feature----Galilea" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "Bryan-Gracida-Tapia"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Bryan-Gracida-Tapia&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Bryan-Gracida-Tapia/SYSGEM_WEB.git",
-    "accountId": "22874578-e27a-4417-bcb8-7f32276a5bd2"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Bryan-Gracida-Tapia/SYSGEM_WEB.git&quot;,
+    &quot;accountId&quot;: &quot;9f14deff-7630-47ff-9d17-939fb6214500&quot;
   }
-}]]></component>
+}</component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4,
-  "fromUser": false
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4,
+  &quot;fromUser&quot;: false
+}</component>
   <component name="ProjectId" id="3CfgBIzK2lGZIbZmRq48D6J0p0s" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -55,23 +72,27 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHELLCHECK.PATH": "/home/ryangt/.local/share/JetBrains/WebStorm2026.1/Shell Script/shellcheck",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Feature----Bryan",
     "javascript.preferred.runtime.type.id": "node",
+    "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3bd3a6803838-JavaScript-WS-261.22158.274" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-WS-261.23567.141" />
       </set>
     </attachedChunks>
   </component>
@@ -83,10 +104,95 @@
       <option name="presentableId" value="Default" />
       <updated>1776781901335</updated>
       <workItem from="1776781902343" duration="398000" />
+      <workItem from="1776785948184" duration="257000" />
+      <workItem from="1776954365105" duration="3596000" />
+      <workItem from="1777039879108" duration="741000" />
+      <workItem from="1777299918817" duration="3842000" />
     </task>
+    <task id="LOCAL-00001" summary="Creación de la interfas de gestión de cargos">
+      <option name="closed" value="true" />
+      <created>1777046684256</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1777046684256</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Creación de los estilos">
+      <option name="closed" value="true" />
+      <created>1777046707443</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1777046707443</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Creacion del js global y de login">
+      <option name="closed" value="true" />
+      <created>1777046728637</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1777046728637</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Creacion del header de gestión de cargos">
+      <option name="closed" value="true" />
+      <created>1777046747017</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1777046747017</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Creación del script de index">
+      <option name="closed" value="true" />
+      <created>1777046765866</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1777046765866</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Creación de los scripts dinamicos de gestión de cargos">
+      <option name="closed" value="true" />
+      <created>1777046795885</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1777046795885</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="Feature----Bryan" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Creación de la interfas de gestión de cargos" />
+    <MESSAGE value="Creación de los estilos" />
+    <MESSAGE value="Creacion del js global y de login" />
+    <MESSAGE value="Creacion del header de gestión de cargos" />
+    <MESSAGE value="Creación del script de index" />
+    <MESSAGE value="Creación de los scripts dinamicos de gestión de cargos" />
+    <option name="LAST_COMMIT_MESSAGE" value="Creación de los scripts dinamicos de gestión de cargos" />
   </component>
 </project>
