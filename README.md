@@ -104,3 +104,22 @@ Se agregó el archivo `src/JavaScripts/DB.js` para centralizar la conexión del 
 - Wrapper `apiFetch()` con serialización JSON automática
 
 Esto reduce código repetido en `login.js`, `gestion_cargos.js` y `gestion_cargos_comuneros.js`.
+
+## 🗄️ Configuración de conexión MySQL (backend local)
+
+El servidor de prueba está en `src/JavaScripts/server.js` y ahora usa variables de entorno.
+
+1. Crea `.env` tomando como base `.env.example`.
+2. Ajusta tus credenciales reales:
+   - `DB_HOST`
+   - `DB_PORT`
+   - `DB_USER`
+   - `DB_PASSWORD`
+   - `DB_NAME`
+3. Instala dependencias:
+   - `npm install`
+4. Inicia el API:
+   - `npm run start:api`
+
+Endpoint de prueba:
+- `GET http://localhost:3000/api/test`
