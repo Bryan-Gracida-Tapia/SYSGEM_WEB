@@ -52,6 +52,7 @@ const db = mysql.createPool({
 function mapComunero(row) {
     return {
         id: row.id,
+        nombre: row.nombre_completo,
         nombreCompleto: row.nombre_completo,
         fechaNacimiento: row.fecha_nacimiento,
         estadoCivil: row.estado_civil,
@@ -86,6 +87,7 @@ app.get("/api/comuneros", async (req, res) => {
  */
 app.post("/api/comuneros", async (req, res) => {
     try {
+        console.log("BODY RECIBIDO:", req.body);
         const {
             nombreCompleto,
             fechaNacimiento,
@@ -96,11 +98,12 @@ app.post("/api/comuneros", async (req, res) => {
             password
         } = req.body;
 
-        const [result] = await db.query("INSERT INTO comuneros (nombre_completo, fecha_nacimiento, estado_civil, tipo, direccion, correo, estado) VALUES (?, ?, ?, ?, ?, ?, 'activo')", [nombreCompleto, fechaNacimiento, estadoCivil, tipo, direccion, correo]);
+        const [result] = await db.query("INSERT INTO comuneros (nombre_completo, fecha_nacimiento, estado_civil, tipo, direccion, correo, estado,fecha_inicio) VALUES (?, ?, ?, ?, ?, ?, 'activo',NOW())", [nombreCompleto, fechaNacimiento, estadoCivil, tipo, direccion, correo]);
 
         res.json({ id: result.insertId });
 
     } catch (err) {
+        console.error("ERROR SQL:", err);
         res.status(500).json({ error: err.message });
     }
 });
