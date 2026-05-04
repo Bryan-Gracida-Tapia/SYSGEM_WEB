@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- URL base para todas las llamadas del frontend hacia la API -->
     <script>
-        window.SYSGEM_API_BASE = window.SYSGEM_API_BASE || "http://localhost:3000/api";
+        window.SYSGEM_API_BASE = window.SYSGEM_API_BASE || "http://localhost:3000/api/sysgem";
     </script>
 </head>
 <body>
@@ -116,9 +116,9 @@
 </div>
 
 <!-- Capa compartida de conexión/API + scripts de sesión y módulo -->
+<script src="../JavaScripts/gestion_cargos.js"></script>
 <script src="../JavaScripts/DB.js"></script>
 <script src="../JavaScripts/global.js"></script>
-<script src="../JavaScripts/gestion_cargos.js"></script>
 <!-- Carga dinámica de componentes compartidos (header y footer) -->
 <script>
     fetch('../Components/header_panel_control.html')
