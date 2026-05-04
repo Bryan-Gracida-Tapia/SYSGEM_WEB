@@ -1,5 +1,5 @@
 "use strict";
-
+// posman para verifica el backend,
 /**
  * ============================================
  * 📌 IMPORTACIONES
@@ -38,9 +38,9 @@ const db = mysql.createPool({
 (async () => {
     try {
         await db.query("SELECT 1");
-        console.log("✅ Conectado a MySQL");
+        console.log(" Conectado a MySQL");
     } catch (err) {
-        console.error("❌ Error MySQL:", err.message);
+        console.error("Error MySQL:", err.message);
     }
 })();
 
