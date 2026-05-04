@@ -1,66 +1,171 @@
+"use strict";
+
+/**
+ * ============================================
+ * 📌 IMPORTACIONES
+ * ============================================
+ */
+require("dotenv").config();
 const express = require("express");
 const mysql = require("mysql2/promise");
 const cors = require("cors");
-require("dotenv").config();
 
 const app = express();
+
+/**
+ * ============================================
+ * 📌 MIDDLEWARE
+ * ============================================
+ */
 app.use(cors());
 app.use(express.json());
 
-const PORT = Number(process.env.PORT || 3000);
+/**
+ * ============================================
+ * 📌 CONEXIÓN A MYSQL
+ * ============================================
+ */
+const db = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+});
 
-const dbConfig = {
-    host: process.env.DB_HOST || "127.0.0.1",
-    port: Number(process.env.DB_PORT || 3306),
-    user: process.env.DB_USER || "admin_sysgem",
-    password: process.env.DB_PASSWORD || "Admin_46825!",
-    database: process.env.DB_NAME || "sysgem",
-    waitForConnections: true,
-    connectionLimit: Number(process.env.DB_POOL_SIZE || 10),
-    queueLimit: 0
-};
-
-if (!dbConfig.user) {
-    console.error("DB_USER no esta configurado.");
-    process.exit(1);
-}
-
-const db = mysql.createPool(dbConfig);
-
-async function verifyDatabaseConnection() {
+/**
+ * Verifica conexión
+ */
+(async () => {
     try {
         await db.query("SELECT 1");
-        console.log("MySQL conectado.");
-    } catch (error) {
-        console.error("No se pudo conectar a MySQL.");
-        console.error("Config:", {
-            host: dbConfig.host,
-            port: dbConfig.port,
-            user: dbConfig.user,
-            database: dbConfig.database
-        });
-        console.error("Detalle:", error.message);
-        process.exit(1);
+        console.log("✅ Conectado a MySQL");
+    } catch (err) {
+        console.error("❌ Error MySQL:", err.message);
     }
+})();
+
+/**
+ * ============================================
+ * 📌 HELPERS
+ * ============================================
+ */
+function mapComunero(row) {
+    return {
+        id: row.id,
+        nombreCompleto: row.nombre_completo,
+        fechaNacimiento: row.fecha_nacimiento,
+        estadoCivil: row.estado_civil,
+        tipo: row.tipo,
+        direccion: row.direccion,
+        correo: row.correo,
+        estado: row.estado,
+        fechaInicio: row.fecha_inicio
+    };
 }
 
-app.get("/api/test", async (_req, res) => {
+/**
+ * ============================================
+ * 📌 ENDPOINTS
+ * ============================================
+ */
+
+/**
+ * Obtener todos los comuneros
+ */
+app.get("/api/comuneros", async (req, res) => {
     try {
-        const [result] = await db.query("SELECT 1 AS ok");
-        res.json(result);
-    } catch (error) {
-        res.status(500).json({
-            message: "Error de base de datos.",
-            detail: error.message
-        });
+        const [rows] = await db.query(`SELECT * FROM comuneros`);
+        res.json({ comuneros: rows.map(mapComunero) });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
-async function startServer() {
-    await verifyDatabaseConnection();
-    app.listen(PORT, () => {
-        console.log(`Servidor en http://localhost:${PORT}`);
-    });
-}
+/**
+ * Crear comunero
+ */
+app.post("/api/comuneros", async (req, res) => {
+    try {
+        const {
+            nombreCompleto,
+            fechaNacimiento,
+            estadoCivil,
+            tipo,
+            direccion,
+            correo,
+            password
+        } = req.body;
 
-startServer();
+        const [result] = await db.query("INSERT INTO comuneros (nombre_completo, fecha_nacimiento, estado_civil, tipo, direccion, correo, estado) VALUES (?, ?, ?, ?, ?, ?, 'activo')", [nombreCompleto, fechaNacimiento, estadoCivil, tipo, direccion, correo]);
+
+        res.json({ id: result.insertId });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/**
+ * Actualizar comunero
+ */
+app.put("/api/comuneros/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {
+            nombreCompleto,
+            direccion,
+            correo
+        } = req.body;
+
+        await db.query(" UPDATE comuneros SET nombre_completo = ?, direccion = ?, correo = ? WHERE id = ?", [nombreCompleto, direccion, correo, id]);
+
+        res.json({ success: true });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/**
+ * Eliminar comunero
+ */
+app.delete("/api/comuneros/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        await db.query("DELETE FROM comuneros WHERE id = ?", [id]);
+
+        res.json({ success: true });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/**
+ * Cambiar estado
+ */
+app.patch("/api/comuneros/:id/estado", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { estado } = req.body;
+
+        await db.query(" UPDATE comuneros SET estado = ? WHERE id = ?", [estado, id]);
+
+        res.json({ success: true });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/**
+ * ============================================
+ * 🚀 SERVIDOR
+ * ============================================
+ */
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`🚀 Servidor en http://localhost:${PORT}`);
+});
