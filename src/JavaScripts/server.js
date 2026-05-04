@@ -94,8 +94,7 @@ app.post("/api/comuneros", async (req, res) => {
             estadoCivil,
             tipo,
             direccion,
-            correo,
-            password
+            correo
         } = req.body;
 
         const [result] = await db.query("INSERT INTO comuneros (nombre_completo, fecha_nacimiento, estado_civil, tipo, direccion, correo, estado,fecha_inicio) VALUES (?, ?, ?, ?, ?, ?, 'activo',NOW())", [nombreCompleto, fechaNacimiento, estadoCivil, tipo, direccion, correo]);
