@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Perfil</title>
+    <link rel="stylesheet" href="../styles/style.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Xx..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="topnav" id="topnav"></header>
+        <!-- MAIN-->
+        <main class="dashboard__section--profile">
+            <!-- BLOQUE: targetas de acciones -->
+            <section class="shortcuts">
+                <div class="card shortcut">
+                    <div class="shortcut__icon">
+                        <i class="far fa-user"></i>
+                    </div>
+                    <span>Perfil</span>
+                    <small class="card__subtitle">Ver y editar perfil</small>
+                </div>
+                <div class="card shortcut">
+                    <div class="shortcut__icon">
+                        <i class="far fa-calendar"></i>
+                    </div>
+                    <span>Calendario</span>
+                    <small class="card__subtitle">Eventos</small>
+                </div>
+                <div class="card shortcut">
+                    <div class="shortcut__icon">
+                        <i class="far fa-aprove"></i>
+                    </div>
+                    <span>Cargos</span>
+                    <small class="card__subtitle">Cargos realizados</small>
+                </div>
+            </section>
+            <!-- BLOQUE: perfil -->
+            <section class="profile">
+                <div class="profile__letf">
+                    <div class="profile__icon">
+                        <i class="far fa-user"></i>
+                    </div>
+                    <div class="profile__info">
+                        <span class="profile__name">Juan Perez</span>
+                        <span class="profile__status">Activo</span>
+                    </div>
+                </div>
+            </section>
+            <!-- BLOQUE: informacion personal -->
+            <section class="information">
+                <!-- Informacion  -->
+                <div class="information__box">
+                    <h3 class="card__title">información personal</h3>
+                    <p class="card__description">información basica</p>
+                </div>
+                <!-- targetas  -->
+                <div class="card__stats card__stats--grid">
+                    <div class="card__stats-container card__stats--profile">
+                        <span class="card__value">Juan Perez</span>
+                        <span class="card__label">Nombre</span>
+                    </div>
+                    <div class="card__stats-container card__stats--profile">
+                        <span class="card__value">01-01-1990</span>
+                        <span class="card__label">Fecha de nacimiento</span>
+                    </div>
+                    <div class="card__stats-container card__stats--profile">
+                        <span class="card__value">juanperez@gmail.com</span>
+                        <span class="card__label">Correo Electronico</span>
+                    </div>
+                    <div class="card__stats-container card__stats--profile">
+                        <span class="card__value">Presidente</span>
+                        <span class="card__label">Cargo actual</span>
+                    </div>
+                </div>
+            </section>
+            <!-- BLOQUE: cargos comunitarios  -->
+            <section class="information">
+                <!-- Informacion  -->
+                <div class="information__box">
+                    <h3 class="card__title">Cargos comunitarios</h3>
+                    <p class="card__description">Historial de cargos</p>
+                </div>
+                <!-- targetas  -->
+                <div class="card__stats card__stats--grid">
+                    <div class="card__stats-container card__stats--profile">
+                        <span class="card__value">5</span>
+                        <span class="card__label">Cumplidos</span>
+                    </div>
+                    <div class="card__stats-container card__stats--profile">
+                        <span class="card__value">2</span>
+                        <span class="card__label">Faltantes</span>
+                    </div>
+                    <div class="card__stats-container card__stats--profile">
+                        <span class="card__value">3</span>
+                        <span class="card__label">Proyectos actuales</span>
+                    </div>
+                    <div class="card__stats-container card__stats--profile">
+                        <span class="card__value">10</span>
+                        <span class="card__label">Proyectos realizados</span>
+                    </div>
+                </div>
+            </section>
+            <!-- BLOQUE: cargs comunitarios vista  -->
+            <section class="Service">
+                <!-- Informacion  -->
+                <div class="information__box">
+                    <h3 class="card__title">Vista de cargo y servicios</h3>
+                    <p class="card__description">Cargos recientes</p>
+                </div>
+                <!-- targetas  -->
+                <div class="card__stats card__stats--flex">
+                    <div class="card__stats-container card__stats--profile">
+                        <div class=" card__stats-view">
+                            <span class="card__value">-</span>
+                            <span class="card__label">Siguente</span>
+                        </div>
+                        <span class="card__label">Descripcion del cargo</span>
+                    </div>
+                    <div class="card__stats-container card__stats--profile">
+                        <div class=" card__stats-view">
+                            <span class="card__value">-</span>
+                            <span class="card__label">En curso</span>
+                        </div>
+                        <span class="card__label">Descripcion del cargo</span>
+                    </div>
+                    <div class="card__stats-contai-er card__stats--profile">
+                        <div class=" card__stats-view">
+                            <span class="card__value">-</span>
+                            <span class="card__label">Finalizado</span>
+                        </div>
+                        <span class="card__label">Descripcion del cargo</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="footer" id="footer"></footer>
+    </div>
+</body>
+</html>
+<script>
+    fetch('../components/header_profile.html')
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('topnav').innerHTML = html;
+
+            initLogout();
+            renderUser();
+        });
+
+    fetch('../components/footer.html')
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('footer').innerHTML = html;
+        });
+</script>

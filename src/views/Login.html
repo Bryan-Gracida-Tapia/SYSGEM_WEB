@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SYSGEM</title>
+    <link rel="stylesheet" href="../styles/style.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Xx..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div class="container container-login" aria-labelledby="login-title">
+        <main class="card card--login" aria-live="polite">
+            <!-- BLOQUE: Titulo y logo -->
+            <div class="brand" aria-hidden="false">
+                <div class="logo" aria-hidden="true">
+                    <img src="../../public/assets/logo.png" style="width: auto; height:auto; max-width:2rem">
+                </div>
+                <div>
+                    <h3 class="card__title">SYSGEM</h3>
+                    <p class="card__description">Accede de forma segura</p>
+                </div>
+            </div>
+            <!-- Título del formulario -->
+            <div class="header">
+                    <h2 class="card__title" id="login-title">Iniciar Sesión</h2>
+                    <div class="card__description">Introduce tu usuario y contraseña para continuar</div>
+            </div>
+
+            <!-- Formulario -->
+            <form class="form form-login" id="login-form" novalidate>
+                <!-- Usuario -->
+                <div class="field">
+                    <span class="icon-left" aria-hidden="true">
+                    <i class="fa-solid fa-user"></i>
+                    </span>
+                    <input class="form__input" id="input-user" name="user" type="text" inputmode="email" autocomplete="username" placeholder="Correo Electrónico o Usuario" aria-label="Correo Electrónico o Usuario" />
+                </div>
+
+                <!-- Contraseña -->
+                <div class="field" style="margin-top:0.25rem;">
+                    <span class="icon-left" aria-hidden="true">
+                        <i class="fa-solid fa-lock"></i>
+                    </span>
+                    <div class="form__password">
+                        <input class="form__input" type="password" id="password-login" required placeholder="Contraseña segura" />
+                        <button type="button" class="form__toggle" id="toggle-password" aria-label="Mostrar contraseña">
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- BLOQUE: Atajo -->
+                <div class="row" style="margin-top:0.25rem;">
+                    <label class="checkbox">
+                        <input id="remember" type="checkbox" />
+                        <span>Recordarme</span>
+                    </label>
+
+                    <a href="#" id="forgot-link" class="forgot" role="button">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <!-- BLOQUE: Acciones -->
+                <div class="form__actions form__actions--login">
+                    <button class="form__button--primary form__button--login" id="btn-login" type="submit">Acceder al Sistema</button>
+                    <button class="form__button form__button--demo" id="btn-demo" type="button" aria-label="Acceder demo">Acceder como Demo</button>
+                </div>
+            </form>
+        </main>
+        <footer class="footer" id="footer"></footer>
+    </div>
+    <script src="../Javacripts/login.js"></script>
+</body>
+</html>
+<script>
+    fetch('../components/footer.html').then(res => res.text()).then(html => {
+        document.getElementById('footer').innerHTML = html;
+    });
+</script>

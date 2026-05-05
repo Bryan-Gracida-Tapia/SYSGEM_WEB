@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Módulo de Gestión de anuncios</title>
+    <link rel="stylesheet" href="../styles/style.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Xx..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Header -->
+        <header class="topnav" id="topnav"></header>
+        <!-- Information -->
+        <section class="dashboard__section--news">
+            <article class="card">
+                <h2 class="card__title">Bienvenido</h2>
+                <p class="card__description">
+                    Gestiona anuncios, revisa servicios y administra cargos de manera sencilla desde este panel
+                </p>
+                <!--  actions  -->
+                <div class="action__news">
+                    <!-- Crear un anuncio -->
+                    <button class="actions__button actions__button--create">
+                        <i class="fa-solid fa-plus"></i>
+                        Crear anuncio
+                    </button>
+                    <!-- Servicios activos -->
+                    <button class="actions__button actions__button--services">
+                        <i class="fa-solid fa-gear"></i>
+                        Servicios activos
+                    </button>
+                    <!-- Cargos activos -->
+                    <button class="actions__button actions__button--charges">
+                        <i class="fa-solid fa-check"></i>
+                        Cargos activos
+                    </button>
+                </div>
+
+            </article>
+        </section>
+        <!-- Main -->
+        <main class="dashboard">
+            <section class="dashboard__section">
+                <!-- Bloque: Crear un anucio -->
+                <article class="card" >
+                    <div class="card__managetop--new">
+                        <h2 class="card__title">Crear Anuncio</h2>
+                        <p class="card__description--gestion">
+                            Rellena los campos y pulsa <strong>Publicar anuncio.</strong>
+                        </p>
+                        <!-- BLOQUE: formulario -->
+                        <div aria-hidden="true">
+                            <!-- form -->
+                            <form class="form_new" id="form-add">
+                                <!-- campos  -->
+                                <div class="form__flex">
+                                    <!-- Titulo -->
+                                    <div class="form__group">
+                                        <label class="form__label" for="title">Titulo del anuncio *</label>
+                                        <input class="form__input" type="text" id="title" required placeholder="Titulo breve" />
+                                    </div>
+                                    <!-- descripción -->
+                                    <div class="form__group">
+                                        <label class="form__label" for="description">Descripción *</label>
+                                        <input class="form__input" type="text" id="description" required placeholder="Describe el anuncio..." />
+                                    </div>
+                                    <!-- fecha de publicación -->
+                                    <div class="form__group">
+                                        <label class="form__label" for="publication-date">Fecha de publicacion *</label>
+                                        <input class="form__input" type="date" id="publication-date" required />
+                                    </div>
+                                </div>
+                                <!-- Acciones del formulario -->
+                                <div class="form__actions">
+                                    <button type="button" class="form__button" id="btn-cancel-add">
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" class="form__button form__button--primary" id="btn-public-advert">
+                                        Publicar anuncio
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </article>
+            </section>
+            <!-- Aside: resumen -->
+            <aside class="dashboard__aside">
+                <section class="card">
+                    <h3 class="card__title">Anuncios activos</h3>
+                    <div class="card__action">
+                        <div class="action-card">
+                            <div class="action-card__avatar">
+                                <i class="fa-solid fa-tools"></i>
+                            </div>
+                            <div class="action-card__info action-card__info--news">
+                                <span class="action-card__name">
+                                    Reparacion de calle
+                                </span>
+                                <span class="action-card__description">
+                                    Tramo en reparación en la Av.cardenas
+                                </span>
+                                <span class="action-card__date">
+                                    <strong>2026-03-31</strong>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card__action">
+                        <div class="action-card">
+                            <div class="action-card__avatar">
+                                <i class="fa-solid fa-people-group"></i>
+                            </div>
+                            <div class="action-card__info action-card__info--news">
+                                <span class="action-card__name">
+                                    Asamblea
+                                </span>
+                                <span class="action-card__description">
+                                    Asamblea con motivo de la fiesta del patron
+                                </span>
+                                <span class="action-card__date">
+                                    <strong>2026-04-05</strong>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="card">
+                    <h3 class="card__title">Cargos activos</h3>
+                    <div class="card__action">
+                        <div class="action-card">
+                            <div class="action-card__avatar">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div class="action-card__info action-card__info--position">
+                                <span class="action-card__name">
+                                    Juan Perez
+                                </span>
+                                <span class="action-card__description">
+                                    Presidente
+                                </span>
+                                <span class="action-card__date">
+                                    Cargo activo desde <strong>2022</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="action-card">
+                            <div class="action-card__avatar">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div class="action-card__info action-card__info--position">
+                                <span class="action-card__name">
+                                    María Gómez
+                                </span>
+                                <span class="action-card__description">
+                                    Tesorera
+                                </span>
+                                <span class="action-card__date">
+                                    Cargo activo desde <strong>2023</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="action-card">
+                            <div class="action-card__avatar">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div class="action-card__info action-card__info--position">
+                                <span class="action-card__name">
+                                    Luis Rodriguez
+                                </span>
+                                <span class="action-card__description">
+                                    Secretario
+                                </span>
+                                <span class="action-card__date">
+                                    Cargo activo desde <strong>2024</strong>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+        </main>
+        <!-- Footer -->
+        <footer class="footer" id="footer"></footer>
+    </div>
+    <script src="../Javacripts/global.js"></script>
+</body>
+</html>
+<script>
+    fetch('../components/header_panel_de_anuncios.html')
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('topnav').innerHTML = html;
+
+            initLogout();
+            renderUser();
+        });
+
+    fetch('../components/footer.html')
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('footer').innerHTML = html;
+        });
+</script>
